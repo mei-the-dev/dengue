@@ -52,7 +52,6 @@ ENV/
 
 # Large or generated project data
 data/
-output/
 
 # Logs
 *.log
