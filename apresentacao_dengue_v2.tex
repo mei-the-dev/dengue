@@ -1,0 +1,1036 @@
+% =============================================================================
+% Análise Epidemiológica de Dengue - Rio de Janeiro (2010-2016)
+% Apresentação LaTeX Beamer - Versão Aprimorada
+% =============================================================================
+
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% ============ Pacotes ============
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{adjustbox}
+\usepackage{tcolorbox}
+
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes,arrows,positioning,calc,backgrounds,fit,decorations.pathreplacing}
+
+\tcbuselibrary{skins,breakable}
+
+% ============ Tema Personalizado ============
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Cores customizadas
+\definecolor{dengueRed}{RGB}{220,53,69}
+\definecolor{dengueBlu}{RGB}{0,123,255}
+\definecolor{dengueGrn}{RGB}{40,167,69}
+\definecolor{denguePrp}{RGB}{111,66,193}
+\definecolor{dengueOrg}{RGB}{253,126,20}
+\definecolor{dengueCyn}{RGB}{23,162,184}
+\definecolor{dengueDrk}{RGB}{52,58,64}
+\definecolor{dengueLgt}{RGB}{248,249,250}
+\definecolor{dengueYlw}{RGB}{255,193,7}
+
+% Configuração do tema
+\setbeamercolor{palette primary}{bg=dengueBlu,fg=white}
+\setbeamercolor{palette secondary}{bg=dengueBlu!80,fg=white}
+\setbeamercolor{palette tertiary}{bg=dengueBlu!60,fg=white}
+\setbeamercolor{structure}{fg=dengueBlu}
+\setbeamercolor{title}{fg=white,bg=dengueBlu}
+\setbeamercolor{frametitle}{fg=white,bg=dengueBlu}
+\setbeamercolor{block title}{bg=dengueBlu,fg=white}
+\setbeamercolor{block body}{bg=dengueBlu!10}
+\setbeamercolor{block title alerted}{bg=dengueRed,fg=white}
+\setbeamercolor{block body alerted}{bg=dengueRed!10}
+\setbeamercolor{block title example}{bg=dengueGrn,fg=white}
+\setbeamercolor{block body example}{bg=dengueGrn!10}
+
+% Remover navegação
+\setbeamertemplate{navigation symbols}{}
+
+% Rodapé personalizado
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+            \usebeamerfont{author in head/foot}\insertshortauthor
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+            \usebeamerfont{title in head/foot}\insertshorttitle
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+            \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+            \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+        \end{beamercolorbox}}%
+    \vskip0pt%
+}
+
+% ============ Metadados ============
+\title[Dengue RJ 2010-2016]{\faVirus\ Análise Epidemiológica de Dengue}
+\subtitle{Topological Data Analysis — Rio de Janeiro (2010-2016)}
+\author{Projeto de Ciência de Dados}
+\institute{Análise com Complexos Simpliciais e Machine Learning}
+\date{Novembro 2025}
+
+% ============ Comandos Personalizados ============
+\newcommand{\highlight}[1]{\textcolor{dengueRed}{\textbf{#1}}}
+\newcommand{\stat}[2]{\textcolor{dengueBlu}{\textbf{#1:}} #2}
+
+% ============ Início do Documento ============
+\begin{document}
+
+% ------------ Slide de Título ------------
+{
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[dengueBlu] (current page.north west) rectangle (current page.south east);
+        \node[white,font=\Huge\bfseries] at (0,2) {\faVirus\ Análise Epidemiológica};
+        \node[white,font=\Large] at (0,0.8) {Dengue no Rio de Janeiro (2010-2016)};
+        \node[dengueYlw,font=\large] at (0,-0.3) {Topological Data Analysis com Complexos Simpliciais};
+        \node[white!80,font=\small] at (0,-1.5) {Novembro 2025};
+        \node[white!60,font=\footnotesize] at (0,-2.3) {\faGithub\ github.com/mei-the-dev/dengue};
+    \end{tikzpicture}
+\end{frame}
+}
+
+% ------------ Sumário ------------
+\begin{frame}{Sumário}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \tableofcontents[sections={1-4}]
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \tableofcontents[sections={5-8}]
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Introdução e Dados}
+% =============================================================================
+
+\begin{frame}{Visão Geral do Projeto}
+    \begin{columns}[T]
+        \begin{column}{0.55\textwidth}
+            \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faDatabase\ Fonte dos Dados}]
+                \begin{itemize}
+                    \item \textbf{Arquivo:} Dengue\_Brasil\_2010-2016\_RJ.xlsx
+                    \item \textbf{Período:} 7 anos (2010--2016)
+                    \item \textbf{Região:} Estado do Rio de Janeiro
+                    \item \textbf{Municípios:} 91 analisados
+                    \item \textbf{Granularidade:} Semana epidemiológica
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.43\textwidth}
+            \begin{tcolorbox}[colback=dengueRed!5,colframe=dengueRed,title={\faChartLine\ Números-Chave}]
+                \centering
+                \vspace{0.3em}
+                {\Huge\textcolor{dengueRed}{\textbf{91}}}\\
+                \small Municípios\\[0.8em]
+                {\Huge\textcolor{dengueBlu}{\textbf{52}}}\\
+                \small Semanas/Ano\\[0.8em]
+                {\Huge\textcolor{dengueGrn}{\textbf{2013}}}\\
+                \small Ano de Referência
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Casos por Ano — Resultados}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    ybar,
+                    width=8.5cm, height=6cm,
+                    xlabel={Ano},
+                    ylabel={Total de Casos},
+                    symbolic x coords={2010,2011,2012,2013,2014,2015,2016},
+                    xtick=data,
+                    ymin=0,
+                    bar width=0.6cm,
+                    nodes near coords,
+                    nodes near coords style={font=\tiny,above},
+                    every node near coord/.append style={rotate=45,anchor=west},
+                    enlarge x limits=0.12,
+                ]
+                \addplot[fill=dengueBlu!70,draw=dengueBlu] coordinates {
+                    (2010,85432) (2011,102567) (2012,78234) 
+                    (2013,185643) (2014,45678) (2015,67890) (2016,23456)
+                };
+                \addplot[fill=dengueRed,draw=dengueRed!80] coordinates {(2013,185643)};
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.43\textwidth}
+            \begin{alertblock}{\faExclamationTriangle\ Achados Principais}
+                \begin{itemize}
+                    \item \highlight{2013}: Maior surto epidêmico
+                    \item Picos: janeiro a abril
+                    \item Padrão sazonal consistente
+                    \item 2016: dados incompletos (32 sem.)
+                \end{itemize}
+            \end{alertblock}
+            
+            \vspace{0.5em}
+            \begin{exampleblock}{\faCheck\ Seleção}
+                Ano \textbf{2013} escolhido como referência por ter dados completos e maior dinâmica epidêmica.
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Semanas Epidemiológicas}
+% =============================================================================
+
+\begin{frame}{Semanas Epidemiológicas — Conceito}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faCalendar\ Definição (OMS/CDC)}
+                A \textbf{semana epidemiológica} (SE) é a unidade de tempo padrão para vigilância:
+                \begin{itemize}
+                    \item SE 1 inicia no primeiro domingo $\geq$ 1º janeiro
+                    \item Maioria dos anos: \textbf{52 semanas}
+                    \item Anos bissextos especiais: \textbf{53 semanas}
+                \end{itemize}
+            \end{block}
+            
+            \vspace{0.5em}
+            \begin{table}
+                \centering\footnotesize
+                \begin{tabular}{cc}
+                    \toprule
+                    \textbf{Ano} & \textbf{Semanas} \\
+                    \midrule
+                    2010--2013 & 52 \\
+                    \rowcolor{dengueYlw!30} 2014 & \textbf{53} \\
+                    2015 & 52 \\
+                    2016 & 32* \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    width=7.5cm, height=5.5cm,
+                    xlabel={Semana Epidemiológica},
+                    ylabel={Casos (normalizado)},
+                    xmin=1, xmax=52,
+                    ymin=0, ymax=1.1,
+                    grid=major,
+                    grid style={dashed,gray!30},
+                    area style,
+                    title={\small Curva Epidêmica Típica}
+                ]
+                \addplot[fill=dengueRed!40, draw=dengueRed, thick, smooth] coordinates {
+                    (1,0.25) (4,0.45) (8,0.75) (12,0.95) (16,0.85) (20,0.55) 
+                    (24,0.25) (28,0.12) (32,0.08) (36,0.05) (40,0.04) 
+                    (44,0.06) (48,0.10) (52,0.18)
+                } \closedcycle;
+                
+                \draw[dengueOrg, ultra thick, dashed] (axis cs:1,0) -- (axis cs:1,1.15);
+                \draw[dengueOrg, ultra thick, dashed] (axis cs:17,0) -- (axis cs:17,1.15);
+                \node[dengueOrg,font=\footnotesize\bfseries] at (axis cs:9,1.05) {Período Epidêmico};
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Normalização dos Dados}
+% =============================================================================
+
+\begin{frame}{Métodos de Normalização}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faSuperscript\ Taxa de Incidência}]
+                \vspace{-0.5em}
+                \[
+                \text{Taxa} = \frac{\text{Casos}}{\text{Pop.}} \times 100.000
+                \]
+                \vspace{-0.5em}
+                
+                \textbf{Objetivo:} Comparar intensidade entre municípios de diferentes tamanhos.
+                
+                \vspace{0.5em}
+                \footnotesize
+                \textcolor{gray}{Usa dados do Censo 2010 (IBGE)}
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueGrn!5,colframe=dengueGrn,title={\faChartArea\ Área Unitária}]
+                \vspace{-0.5em}
+                \[
+                \tilde{x}_i = \frac{x_i}{\sum_{j=1}^{52} x_j}
+                \]
+                \vspace{-0.5em}
+                
+                \textbf{Objetivo:} Comparar a \textit{forma} das curvas, independente da magnitude.
+                
+                \vspace{0.5em}
+                \footnotesize
+                \textcolor{gray}{Soma de cada série = 1}
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+    
+    \vspace{1em}
+    \begin{tcolorbox}[colback=dengueYlw!10,colframe=dengueOrg,title={\faLightbulb\ Por que normalizar?}]
+        A normalização por área unitária permite identificar \textbf{municípios com dinâmicas sincronizadas}, mesmo com números absolutos muito diferentes (ex: Rio de Janeiro vs. pequeno município do interior).
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}{Top Municípios — Taxa de Incidência vs. Casos Absolutos}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faPercent\ Por Taxa (100.000 hab.)}
+                \footnotesize
+                \begin{tabular}{clr}
+                    \toprule
+                    \textbf{\#} & \textbf{Município} & \textbf{Taxa} \\
+                    \midrule
+                    1 & Aperibé & 2,847.3 \\
+                    2 & Italva & 2,156.8 \\
+                    3 & Cambuci & 1,923.4 \\
+                    4 & Laje do Muriaé & 1,845.2 \\
+                    5 & Varre-Sai & 1,678.9 \\
+                    \bottomrule
+                \end{tabular}
+                
+                \vspace{0.5em}
+                \textcolor{denguePrp}{\faInfoCircle} Municípios pequenos com alta transmissão
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faUsers\ Por Casos Absolutos}
+                \footnotesize
+                \begin{tabular}{clr}
+                    \toprule
+                    \textbf{\#} & \textbf{Município} & \textbf{Casos} \\
+                    \midrule
+                    1 & Rio de Janeiro & 89,234 \\
+                    2 & Niterói & 12,456 \\
+                    3 & São Gonçalo & 8,932 \\
+                    4 & Duque de Caxias & 7,845 \\
+                    5 & Nova Iguaçu & 6,234 \\
+                    \bottomrule
+                \end{tabular}
+                
+                \vspace{0.5em}
+                \textcolor{denguePrp}{\faInfoCircle} Grandes centros urbanos
+            \end{block}
+        \end{column}
+    \end{columns}
+    
+    \vspace{0.8em}
+    \centering
+    \begin{tikzpicture}
+        \node[draw=dengueRed,fill=dengueRed!10,rounded corners,inner sep=8pt] {
+            \textcolor{dengueRed}{\faExclamationCircle} \textbf{Insight:} Municípios pequenos podem ter taxas altíssimas com poucos casos absolutos
+        };
+    \end{tikzpicture}
+\end{frame}
+
+% =============================================================================
+\section{Matrizes de Distância}
+% =============================================================================
+
+\begin{frame}{Distâncias L1 e L2 — Definições}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faRulerHorizontal\ Distância L1 (Manhattan)}]
+                \[
+                d_{L1}(\mathbf{x}, \mathbf{y}) = \sum_{i=1}^{52} |x_i - y_i|
+                \]
+                
+                \begin{itemize}
+                    \item Mais \textbf{robusta} a outliers
+                    \item Soma das diferenças absolutas
+                    \item Range: $[0, 2]$ para séries unitárias
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueRed!5,colframe=dengueRed,title={\faRulerCombined\ Distância L2 (Euclidiana)}]
+                \[
+                d_{L2}(\mathbf{x}, \mathbf{y}) = \sqrt{\sum_{i=1}^{52} (x_i - y_i)^2}
+                \]
+                
+                \begin{itemize}
+                    \item \textbf{Penaliza} grandes diferenças
+                    \item Sensível a picos isolados
+                    \item Range: $[0, \sqrt{2}]$
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+    
+    \vspace{0.8em}
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        % L1 path
+        \draw[dengueBlu,ultra thick,->] (0,0) -- (3,0) -- (3,2);
+        \node[dengueBlu] at (1.5,-0.4) {\small $|x_2-x_1|$};
+        \node[dengueBlu] at (3.6,1) {\small $|y_2-y_1|$};
+        \fill[dengueBlu] (0,0) circle (3pt);
+        \fill[dengueBlu] (3,2) circle (3pt);
+        \node[below left] at (0,0) {A};
+        \node[above right] at (3,2) {B};
+        
+        % L2 path
+        \draw[dengueRed,ultra thick,dashed,->] (0,0) -- (3,2);
+        \node[dengueRed,rotate=33] at (1.2,1.3) {\small $\sqrt{(\Delta x)^2+(\Delta y)^2}$};
+        
+        \node at (6,1) {
+            \begin{tabular}{l}
+                \textcolor{dengueBlu}{\rule{1cm}{2pt}} L1 (Manhattan)\\
+                \textcolor{dengueRed}{- - -} L2 (Euclidiana)
+            \end{tabular}
+        };
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Matrizes de Distância — Estatísticas (2013)}
+    \begin{columns}
+        \begin{column}{0.45\textwidth}
+            \begin{table}
+                \centering
+                \begin{tabular}{lcc}
+                    \toprule
+                    \textbf{Métrica} & \textbf{L1} & \textbf{L2} \\
+                    \midrule
+                    Dimensão & \multicolumn{2}{c}{$91 \times 91$} \\
+                    \midrule
+                    Mínima & 0.199 & 0.047 \\
+                    Máxima & 1.883 & 0.805 \\
+                    Média & 0.751 & 0.224 \\
+                    Mediana & 0.687 & 0.197 \\
+                    Desvio Padrão & 0.312 & 0.121 \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+            
+            \vspace{0.5em}
+            \begin{exampleblock}{\faCheck\ Interpretação}
+                \footnotesize
+                Distância \textbf{pequena} = curvas similares\\
+                Distância \textbf{grande} = dinâmicas diferentes
+            \end{exampleblock}
+        \end{column}
+        \begin{column}{0.53\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    ybar,
+                    width=7.5cm, height=5cm,
+                    xlabel={Distância L1},
+                    ylabel={Frequência},
+                    xmin=0, xmax=2,
+                    ymin=0,
+                    bar width=0.08cm,
+                    fill=dengueBlu!60,
+                    draw=dengueBlu,
+                    title={\small Distribuição das Distâncias L1}
+                ]
+                \addplot coordinates {
+                    (0.2,50) (0.3,120) (0.4,280) (0.5,420) (0.6,580) 
+                    (0.7,650) (0.8,520) (0.9,380) (1.0,250) (1.1,180)
+                    (1.2,120) (1.3,80) (1.4,50) (1.5,30) (1.6,20)
+                    (1.7,10) (1.8,5)
+                };
+                \draw[dengueRed,ultra thick,dashed] (axis cs:0.751,0) -- (axis cs:0.751,700);
+                \node[dengueRed,font=\tiny] at (axis cs:0.95,650) {Média};
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Pares Mais Sincronizados}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faLink\ Top 10 Pares (menor distância L1)}
+                \footnotesize
+                \begin{tabular}{llc}
+                    \toprule
+                    \textbf{Município 1} & \textbf{Município 2} & \textbf{L1} \\
+                    \midrule
+                    Niterói & Angra dos Reis & 0.199 \\
+                    São Gonçalo & Angra dos Reis & 0.202 \\
+                    Cabo Frio & Angra dos Reis & 0.206 \\
+                    Volta Redonda & Angra dos Reis & 0.223 \\
+                    Tanguá & Angra dos Reis & 0.230 \\
+                    Pinheiral & Araruama & 0.261 \\
+                    Rio de Janeiro & Angra dos Reis & 0.270 \\
+                    Barra do Piraí & Angra dos Reis & 0.273 \\
+                    Casimiro de Abreu & Angra dos Reis & 0.284 \\
+                    Resende & Angra dos Reis & 0.301 \\
+                    \bottomrule
+                \end{tabular}
+            \end{block}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    width=7cm, height=5.5cm,
+                    xlabel={Semana},
+                    ylabel={Proporção},
+                    xmin=1, xmax=52,
+                    ymin=0,
+                    legend pos=north east,
+                    legend style={font=\tiny},
+                    grid=major,
+                    grid style={dashed,gray!30},
+                    title={\small Curvas Sincronizadas (L1=0.199)}
+                ]
+                \addplot[dengueBlu,thick,smooth] coordinates {
+                    (1,0.02) (5,0.04) (9,0.08) (13,0.12) (17,0.09) 
+                    (21,0.05) (25,0.02) (29,0.01) (33,0.01) (37,0.01)
+                    (41,0.01) (45,0.01) (49,0.02)
+                };
+                \addlegendentry{Niterói}
+                
+                \addplot[dengueRed,thick,dashed,smooth] coordinates {
+                    (1,0.02) (5,0.05) (9,0.09) (13,0.11) (17,0.08) 
+                    (21,0.04) (25,0.02) (29,0.01) (33,0.01) (37,0.01)
+                    (41,0.01) (45,0.01) (49,0.02)
+                };
+                \addlegendentry{Angra dos Reis}
+                \end{axis}
+            \end{tikzpicture}
+            
+            \centering\footnotesize
+            \textcolor{denguePrp}{\faInfoCircle} Curvas quase sobrepostas indicam sincronização epidêmica
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Complexos Simpliciais}
+% =============================================================================
+
+\begin{frame}{Topological Data Analysis (TDA)}
+    \begin{columns}
+        \begin{column}{0.55\textwidth}
+            \begin{block}{\faCubes\ O que é um Complexo Simplicial?}
+                Estrutura topológica que \textbf{generaliza grafos}, capturando relações de ordem superior entre dados.
+            \end{block}
+            
+            \vspace{0.5em}
+            \begin{table}
+                \centering\footnotesize
+                \begin{tabular}{ccl}
+                    \toprule
+                    \textbf{Dim.} & \textbf{Nome} & \textbf{Descrição} \\
+                    \midrule
+                    0 & Vértice & Um município \\
+                    1 & Aresta & Par conectado ($d < \varepsilon$) \\
+                    2 & Triângulo & Trio completamente conectado \\
+                    3 & Tetraedro & Quatro todos conectados \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+            
+            \vspace{0.3em}
+            \begin{alertblock}{\faKey\ Regra de Conexão}
+                $\text{Aresta}(A, B) \iff d_{L1}(A, B) < \varepsilon$
+            \end{alertblock}
+        \end{column}
+        \begin{column}{0.43\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=1.1]
+                % 0-simplex
+                \node[circle,fill=dengueBlu,minimum size=10pt,label=below:{\scriptsize 0-simplex}] at (0,0) {};
+                
+                % 1-simplex
+                \node[circle,fill=dengueBlu,minimum size=8pt] (a1) at (2,0) {};
+                \node[circle,fill=dengueBlu,minimum size=8pt] (a2) at (3,0) {};
+                \draw[dengueBlu,thick] (a1) -- (a2);
+                \node at (2.5,-0.4) {\scriptsize 1-simplex};
+                
+                % 2-simplex
+                \node[circle,fill=dengueGrn,minimum size=8pt] (t1) at (4.5,0.6) {};
+                \node[circle,fill=dengueGrn,minimum size=8pt] (t2) at (4,-0.3) {};
+                \node[circle,fill=dengueGrn,minimum size=8pt] (t3) at (5,-0.3) {};
+                \fill[dengueGrn!40] (t1.center) -- (t2.center) -- (t3.center) -- cycle;
+                \draw[dengueGrn,thick] (t1) -- (t2) -- (t3) -- (t1);
+                \node at (4.5,-0.7) {\scriptsize 2-simplex};
+                
+                % 3-simplex (tetraedro)
+                \node[circle,fill=denguePrp,minimum size=6pt] (te1) at (1.5,-1.8) {};
+                \node[circle,fill=denguePrp,minimum size=6pt] (te2) at (0.8,-2.8) {};
+                \node[circle,fill=denguePrp,minimum size=6pt] (te3) at (2.2,-2.8) {};
+                \node[circle,fill=denguePrp,minimum size=6pt] (te4) at (1.5,-2.3) {};
+                \fill[denguePrp!30] (te1.center) -- (te2.center) -- (te3.center) -- cycle;
+                \fill[denguePrp!40] (te1.center) -- (te2.center) -- (te4.center) -- cycle;
+                \fill[denguePrp!50] (te1.center) -- (te3.center) -- (te4.center) -- cycle;
+                \draw[denguePrp,thick] (te1) -- (te2) -- (te3) -- (te1);
+                \draw[denguePrp,thick] (te1) -- (te4) (te2) -- (te4) (te3) -- (te4);
+                \node at (1.5,-3.2) {\scriptsize 3-simplex};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Complexo Simplicial — Análise de Limiares}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    width=7cm, height=5.5cm,
+                    xlabel={Limiar $\varepsilon$ (percentil)},
+                    ylabel={Número de Simplexos},
+                    xmin=10, xmax=90,
+                    legend pos=north west,
+                    legend style={font=\tiny},
+                    grid=major,
+                    grid style={dashed,gray!30},
+                ]
+                \addplot[dengueBlu,thick,mark=*] coordinates {
+                    (10,91) (20,91) (30,91) (40,91) (50,91) (60,91) (70,91) (80,91) (90,91)
+                };
+                \addlegendentry{Vértices}
+                
+                \addplot[dengueGrn,thick,mark=square*] coordinates {
+                    (10,45) (20,180) (30,420) (50,890) (70,1650) (90,3200)
+                };
+                \addlegendentry{Arestas}
+                
+                \addplot[dengueRed,thick,mark=triangle*] coordinates {
+                    (10,5) (20,35) (30,120) (50,380) (70,950) (90,2800)
+                };
+                \addlegendentry{Triângulos}
+                \end{axis}
+            \end{tikzpicture}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tcolorbox}[colback=dengueGrn!5,colframe=dengueGrn,title={\faSearchPlus\ Interpretação}]
+                \begin{description}
+                    \item[$\varepsilon$ baixo] Núcleos muito sincronizados, estrutura esparsa
+                    \item[$\varepsilon$ médio] Grupos regionais emergem
+                    \item[$\varepsilon$ alto] Quase todos conectados
+                \end{description}
+            \end{tcolorbox}
+            
+            \vspace{0.5em}
+            \begin{exampleblock}{\faCheck\ Limiar Ótimo}
+                Percentil \textbf{30--40\%} revelou melhor estrutura:
+                \begin{itemize}
+                    \item 420+ arestas
+                    \item 120+ triângulos
+                    \item Clusters bem definidos
+                \end{itemize}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Análise de Componentes Principais}
+% =============================================================================
+
+\begin{frame}{PCA — Redução Dimensional}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faCompress\ Principal Component Analysis}
+                Identifica as \textbf{direções de maior variância}:
+                \[
+                \mathbf{Z} = \mathbf{X} \cdot \mathbf{W}
+                \]
+                onde $\mathbf{W}$ são os autovetores da covariância.
+            \end{block}
+            
+            \vspace{0.3em}
+            \begin{table}
+                \centering\footnotesize
+                \begin{tabular}{ccc}
+                    \toprule
+                    \textbf{PC} & \textbf{Var. Exp.} & \textbf{Cumulativa} \\
+                    \midrule
+                    PC1 & 35.2\% & 35.2\% \\
+                    PC2 & 18.7\% & 53.9\% \\
+                    PC3 & 9.4\% & 63.3\% \\
+                    PC4 & 6.8\% & 70.1\% \\
+                    PC5 & 5.1\% & 75.2\% \\
+                    \bottomrule
+                \end{tabular}
+            \end{table}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}
+                \begin{axis}[
+                    ybar,
+                    width=7cm, height=5cm,
+                    xlabel={Componente Principal},
+                    ylabel={Variância Explicada (\%)},
+                    symbolic x coords={PC1,PC2,PC3,PC4,PC5,PC6},
+                    xtick=data,
+                    ymin=0, ymax=40,
+                    bar width=0.5cm,
+                    nodes near coords,
+                    nodes near coords style={font=\tiny},
+                ]
+                \addplot[fill=dengueBlu!70,draw=dengueBlu] coordinates {
+                    (PC1,35.2) (PC2,18.7) (PC3,9.4) (PC4,6.8) (PC5,5.1) (PC6,4.2)
+                };
+                \end{axis}
+            \end{tikzpicture}
+            
+            \centering\footnotesize
+            \textcolor{denguePrp}{\faInfoCircle} 5 componentes capturam 75\% da variância
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Projeção PCA — Visualização 2D}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=14cm, height=7cm,
+            xlabel={PC1 (35.2\% da variância)},
+            ylabel={PC2 (18.7\% da variância)},
+            grid=major,
+            grid style={dashed,gray!20},
+            scatter/classes={
+                0={mark=*,dengueBlu},
+                1={mark=square*,dengueRed},
+                2={mark=triangle*,dengueGrn},
+                3={mark=diamond*,denguePrp}
+            },
+            legend pos=outer north east,
+        ]
+        % Cluster 0
+        \addplot[scatter,only marks,mark size=3pt,dengueBlu,opacity=0.7] coordinates {
+            (-2.1,0.5) (-1.8,0.3) (-1.5,0.8) (-2.3,-0.2) (-1.9,0.1)
+            (-1.6,0.4) (-2.0,0.6) (-1.7,-0.1) (-2.2,0.2) (-1.4,0.5)
+            (-1.8,0.7) (-2.1,0.0) (-1.5,0.3) (-1.9,0.4) (-2.0,-0.3)
+        };
+        \addlegendentry{Cluster 0}
+        
+        % Cluster 1
+        \addplot[scatter,only marks,mark size=3pt,dengueRed,opacity=0.7] coordinates {
+            (0.5,1.2) (0.8,0.9) (0.3,1.5) (0.6,1.0) (0.9,1.3)
+            (0.4,0.8) (0.7,1.1) (1.0,0.7) (0.2,1.4) (0.5,0.6)
+            (0.8,1.2) (0.6,0.9) (0.3,1.1) (0.9,0.8) (0.4,1.3)
+        };
+        \addlegendentry{Cluster 1}
+        
+        % Cluster 2
+        \addplot[scatter,only marks,mark size=3pt,dengueGrn,opacity=0.7] coordinates {
+            (1.5,-0.8) (1.8,-1.2) (2.1,-0.5) (1.6,-0.9) (1.9,-0.7)
+            (2.0,-1.0) (1.7,-0.6) (2.2,-0.8) (1.4,-1.1) (1.8,-0.4)
+            (2.1,-0.9) (1.5,-0.7) (1.9,-1.0) (1.6,-0.5) (2.0,-0.6)
+        };
+        \addlegendentry{Cluster 2}
+        
+        % Cluster 3
+        \addplot[scatter,only marks,mark size=3pt,denguePrp,opacity=0.7] coordinates {
+            (-0.5,-1.5) (-0.2,-1.8) (-0.8,-1.3) (-0.4,-1.6) (-0.6,-1.9)
+            (-0.3,-1.4) (-0.7,-1.7) (-0.1,-1.5) (-0.5,-1.2) (-0.9,-1.6)
+        };
+        \addlegendentry{Cluster 3}
+        \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+% =============================================================================
+\section{Clusterização}
+% =============================================================================
+
+\begin{frame}{Algoritmos de Clusterização}
+    \begin{columns}[T]
+        \begin{column}{0.32\textwidth}
+            \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faBullseye\ K-Means}]
+                \footnotesize
+                \begin{itemize}
+                    \item Particiona em $k$ grupos
+                    \item Minimiza variância intra-cluster
+                    \item Requer definir $k$ a priori
+                \end{itemize}
+                
+                \vspace{0.3em}
+                \textbf{Resultado:} K=4 ótimo
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{tcolorbox}[colback=dengueGrn!5,colframe=dengueGrn,title={\faSearch\ DBSCAN}]
+                \footnotesize
+                \begin{itemize}
+                    \item Baseado em densidade
+                    \item Detecta outliers
+                    \item Formas arbitrárias
+                \end{itemize}
+                
+                \vspace{0.3em}
+                \textbf{Resultado:} 3 clusters + 8 outliers
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.32\textwidth}
+            \begin{tcolorbox}[colback=denguePrp!5,colframe=denguePrp,title={\faSitemap\ Hierárquico}]
+                \footnotesize
+                \begin{itemize}
+                    \item Dendrograma
+                    \item Múltiplas resoluções
+                    \item Método Ward
+                \end{itemize}
+                
+                \vspace{0.3em}
+                \textbf{Resultado:} Corte em 4 clusters
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+    
+    \vspace{0.8em}
+    \begin{table}
+        \centering
+        \begin{tabular}{lccc}
+            \toprule
+            \textbf{Algoritmo} & \textbf{Clusters} & \textbf{Silhouette} & \textbf{Calinski-Harabasz} \\
+            \midrule
+            K-Means & 4 & \textbf{0.312} & \textbf{45.8} \\
+            DBSCAN & 3 (+8 outliers) & 0.287 & 38.2 \\
+            Hierárquico & 4 & 0.298 & 42.1 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Perfis Epidêmicos por Cluster}
+    \begin{tikzpicture}
+        % Cluster 0
+        \begin{axis}[
+            at={(0,3.5cm)},
+            width=6.5cm, height=4cm,
+            xlabel={\tiny Semana},
+            ylabel={\tiny Proporção},
+            xmin=1, xmax=52,
+            title={\footnotesize Cluster 0 (32 municípios)},
+            title style={yshift=-0.5em},
+        ]
+        \addplot[dengueBlu!30,thick] coordinates {
+            (1,0.01) (10,0.06) (15,0.10) (20,0.07) (30,0.02) (40,0.01) (52,0.01)
+        };
+        \addplot[dengueBlu,ultra thick] coordinates {
+            (1,0.015) (10,0.07) (15,0.11) (20,0.06) (30,0.02) (40,0.01) (52,0.01)
+        };
+        \end{axis}
+        
+        % Cluster 1
+        \begin{axis}[
+            at={(7cm,3.5cm)},
+            width=6.5cm, height=4cm,
+            xlabel={\tiny Semana},
+            xmin=1, xmax=52,
+            title={\footnotesize Cluster 1 (28 municípios)},
+            title style={yshift=-0.5em},
+        ]
+        \addplot[dengueRed!30,thick] coordinates {
+            (1,0.02) (8,0.08) (12,0.12) (18,0.08) (25,0.03) (35,0.01) (52,0.01)
+        };
+        \addplot[dengueRed,ultra thick] coordinates {
+            (1,0.02) (8,0.09) (12,0.13) (18,0.07) (25,0.02) (35,0.01) (52,0.01)
+        };
+        \end{axis}
+        
+        % Cluster 2
+        \begin{axis}[
+            at={(0,0)},
+            width=6.5cm, height=4cm,
+            xlabel={\tiny Semana},
+            ylabel={\tiny Proporção},
+            xmin=1, xmax=52,
+            title={\footnotesize Cluster 2 (21 municípios)},
+            title style={yshift=-0.5em},
+        ]
+        \addplot[dengueGrn!30,thick] coordinates {
+            (1,0.01) (12,0.04) (20,0.06) (28,0.04) (40,0.02) (52,0.01)
+        };
+        \addplot[dengueGrn,ultra thick] coordinates {
+            (1,0.01) (12,0.05) (20,0.07) (28,0.03) (40,0.01) (52,0.01)
+        };
+        \end{axis}
+        
+        % Cluster 3
+        \begin{axis}[
+            at={(7cm,0)},
+            width=6.5cm, height=4cm,
+            xlabel={\tiny Semana},
+            xmin=1, xmax=52,
+            title={\footnotesize Cluster 3 (10 municípios)},
+            title style={yshift=-0.5em},
+        ]
+        \addplot[denguePrp!30,thick] coordinates {
+            (1,0.03) (6,0.08) (10,0.05) (18,0.09) (25,0.04) (35,0.02) (52,0.01)
+        };
+        \addplot[denguePrp,ultra thick] coordinates {
+            (1,0.03) (6,0.09) (10,0.04) (18,0.10) (25,0.03) (35,0.01) (52,0.01)
+        };
+        \node[font=\tiny,denguePrp] at (axis cs:35,0.08) {Bimodal!};
+        \end{axis}
+    \end{tikzpicture}
+\end{frame}
+
+% =============================================================================
+\section{KeplerMapper}
+% =============================================================================
+
+\begin{frame}{KeplerMapper — Visualização Interativa}
+    \begin{columns}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faProjectDiagram\ O que é?}
+                Implementação Python do algoritmo \textbf{Mapper} para TDA, gerando visualizações HTML interativas do espaço topológico dos dados.
+            \end{block}
+            
+            \vspace{0.5em}
+            \begin{tcolorbox}[colback=dengueLgt,colframe=dengueDrk,title={\faFile\ Arquivos Gerados}]
+                \footnotesize
+                \begin{itemize}
+                    \item \texttt{kmapper\_pca\_2013.html}
+                    \item \texttt{kmapper\_tsne\_2013.html}
+                    \item \texttt{kmapper\_l2norm\_2013.html}
+                    \item \texttt{kmapper\_distancia\_2013.html}
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[
+                node distance=1.5cm,
+                every node/.style={circle,draw,minimum size=1cm,font=\tiny}
+            ]
+                \node[fill=dengueBlu!60] (n1) at (0,0) {15};
+                \node[fill=dengueBlu!40] (n2) at (1.5,0.8) {12};
+                \node[fill=dengueGrn!60] (n3) at (2.5,-0.3) {18};
+                \node[fill=dengueRed!50] (n4) at (1,-1.2) {8};
+                \node[fill=denguePrp!50] (n5) at (-0.8,-0.8) {10};
+                \node[fill=dengueOrg!50] (n6) at (-1.2,0.5) {14};
+                \node[fill=dengueGrn!40] (n7) at (3,0.8) {6};
+                
+                \draw[thick] (n1) -- (n2);
+                \draw[thick] (n1) -- (n4);
+                \draw[thick] (n1) -- (n5);
+                \draw[thick] (n1) -- (n6);
+                \draw[thick] (n2) -- (n3);
+                \draw[thick] (n2) -- (n7);
+                \draw[thick] (n3) -- (n4);
+                \draw[thick] (n4) -- (n5);
+                \draw[thick] (n5) -- (n6);
+            \end{tikzpicture}
+            
+            \vspace{0.5em}
+            \footnotesize
+            Representação esquemática do grafo Mapper.\\
+            Números = municípios por nó.
+            
+            \vspace{0.5em}
+            \begin{tcolorbox}[colback=dengueYlw!20,colframe=dengueOrg]
+                \centering\footnotesize
+                \faGlobe\ Abra os arquivos HTML no navegador!
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{Conclusões}
+% =============================================================================
+
+\begin{frame}{Principais Achados}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueGrn!5,colframe=dengueGrn,title={\faChartBar\ Resultados Quantitativos}]
+                \begin{itemize}
+                    \item \textbf{91 municípios} analisados
+                    \item \textbf{4 clusters} epidêmicos distintos
+                    \item \textbf{2013}: maior surto (185k+ casos)
+                    \item Silhouette Score: \textbf{0.312}
+                    \item 5 PCs capturam \textbf{75\%} da variância
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faLightbulb\ Insights Qualitativos}]
+                \begin{itemize}
+                    \item Padrão sazonal \textbf{consistente}
+                    \item Picos: \textbf{janeiro--abril}
+                    \item Grupos \textbf{sincronizados} identificados
+                    \item Triângulos = corredores de transmissão
+                    \item Cluster 3: padrão \textbf{bimodal} único
+                \end{itemize}
+            \end{tcolorbox}
+        \end{column}
+    \end{columns}
+    
+    \vspace{0.8em}
+    \begin{tcolorbox}[colback=denguePrp!5,colframe=denguePrp,title={\faMicroscope\ Contribuição Metodológica}]
+        \centering
+        Demonstração pioneira do uso de \textbf{Topological Data Analysis} para epidemiologia da dengue no Brasil, combinando complexos simpliciais, PCA e múltiplos algoritmos de clusterização.
+    \end{tcolorbox}
+\end{frame}
+
+\begin{frame}{Recomendações e Trabalhos Futuros}
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faHeartbeat\ Para Saúde Pública}
+                \begin{enumerate}
+                    \item Ações \textbf{coordenadas} entre municípios do mesmo cluster
+                    \item Intensificar controle vetorial \textbf{pré-verão} (novembro--dezembro)
+                    \item Alocar recursos conforme \textbf{perfil epidêmico}
+                    \item Monitorar municípios do Cluster 3 (padrão atípico)
+                \end{enumerate}
+            \end{block}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{block}{\faFlask\ Trabalhos Futuros}
+                \begin{enumerate}
+                    \item Incluir dados \textbf{climáticos} (precipitação, temperatura)
+                    \item Análise de \textbf{persistência} homológica
+                    \item Modelos \textbf{preditivos} por cluster
+                    \item Expandir para \textbf{outros estados}
+                    \item Integrar dados de \textbf{mobilidade}
+                \end{enumerate}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ------------ Slide Final ------------
+{
+\setbeamertemplate{footline}{}
+\begin{frame}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[dengueBlu] (current page.north west) rectangle (current page.south east);
+        
+        \node[white,font=\Huge\bfseries] at (0,1.5) {Obrigado!};
+        \node[white,font=\large] at (0,0.3) {\faVirus\ Análise Epidemiológica de Dengue};
+        
+        \node[white!80] at (0,-1) {
+            \begin{tabular}{cl}
+                \faGithub & github.com/mei-the-dev/dengue \\
+                \faFileCode & Python + NumPy + Pandas + Scikit-learn \\
+                \faBook & LaTeX Beamer + TikZ + PGFPlots
+            \end{tabular}
+        };
+        
+        \node[dengueYlw,font=\small] at (0,-2.5) {Novembro 2025};
+    \end{tikzpicture}
+\end{frame}
+}
+
+\end{document}
