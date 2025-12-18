@@ -1,0 +1,113 @@
+.:
+total 36
+drwxrwxr-x 2 mei mei 4096 Dec 18 13:34 apresentacao
+drwxrwxr-x 2 mei mei 4096 Dec 18 13:34 data
+-rw-rw-r-- 1 mei mei    0 Dec 18 13:34 estrutura_reorganizada.txt
+drwxrwxr-x 2 mei mei 4096 Dec 18 13:34 notebooks
+drwxrwxr-x 2 mei mei 4096 Nov 27 13:55 output
+-rw-rw-r-- 1 mei mei 4165 Nov 27 10:08 README.md
+-rw-rw-r-- 1 mei mei  400 Nov 27 10:08 requirements.txt
+drwxrwxr-x 2 mei mei 4096 Dec 18 13:34 scripts
+drwxrwxr-x 3 mei mei 4096 Dec 18 13:23 src
+
+./apresentacao:
+total 1188
+-rw-rw-r-- 1 mei mei 476900 Nov 27 13:33 apresentacao_dengue.pdf
+-rw-rw-r-- 1 mei mei  26296 Nov 27 13:33 apresentacao_dengue.tex
+-rw-rw-r-- 1 mei mei   6304 Dec 18 13:13 apresentacao_dengue_v2.aux
+-rw-rw-r-- 1 mei mei  56797 Dec 18 13:13 apresentacao_dengue_v2.log
+-rw-rw-r-- 1 mei mei   3883 Dec 18 13:13 apresentacao_dengue_v2.nav
+-rw-rw-r-- 1 mei mei   1315 Dec 18 13:13 apresentacao_dengue_v2.out
+-rw-rw-r-- 1 mei mei 486131 Dec 18 13:13 apresentacao_dengue_v2.pdf
+-rw-rw-r-- 1 mei mei      0 Dec 18 13:13 apresentacao_dengue_v2.snm
+-rw-rw-r-- 1 mei mei  29645 Dec 18 13:13 apresentacao_dengue_v2.tex
+-rw-rw-r-- 1 mei mei    544 Dec 18 13:13 apresentacao_dengue_v2.toc
+-rw-rw-r-- 1 mei mei  44037 Nov 27 13:59 apresentacao.html
+-rw-rw-r-- 1 mei mei  62928 Nov 27 15:22 apresentacao_revealjs.html
+
+./data:
+total 184
+-rw-rw-r-- 1 mei mei 185759 Nov 27 09:48 Dengue_Brasil_2010-2016_RJ.xlsx
+
+./notebooks:
+total 4252
+-rw-rw-r-- 1 mei mei 4351316 Dec 18 13:28 Apresentacao_Analise_Dengue.ipynb
+
+./output:
+total 16792
+-rw-rw-r-- 1 mei mei  199118 Nov 27 10:41 apresentacao_clusters_pca.png
+-rw-rw-r-- 1 mei mei 2803912 Nov 27 10:43 apresentacao_complexo_simplicial.png
+-rw-rw-r-- 1 mei mei  182350 Dec 18 13:17 apresentacao_curvas_ano.png
+-rw-rw-r-- 1 mei mei   81565 Dec 18 13:17 apresentacao_dados_gerais.png
+-rw-rw-r-- 1 mei mei  222836 Nov 27 10:41 apresentacao_dendrograma.png
+-rw-rw-r-- 1 mei mei   82075 Nov 27 10:41 apresentacao_distribuicao_distancias.png
+-rw-rw-r-- 1 mei mei  190647 Nov 27 10:41 apresentacao_incidencia.png
+-rw-rw-r-- 1 mei mei  113936 Dec 18 13:18 apresentacao_kmeans_avaliacao.png
+-rw-rw-r-- 1 mei mei  375687 Nov 27 10:41 apresentacao_pares_sincronizados.png
+-rw-rw-r-- 1 mei mei  251433 Nov 27 10:41 apresentacao_pca_projecao.png
+-rw-rw-r-- 1 mei mei   88828 Dec 18 13:17 apresentacao_pca_variancia.png
+-rw-rw-r-- 1 mei mei  459100 Nov 27 10:42 apresentacao_perfis_clusters.png
+-rw-rw-r-- 1 mei mei  122530 Nov 27 10:43 apresentacao_simplicial_limiares.png
+-rw-rw-r-- 1 mei mei   44061 Nov 27 13:55 boxplot_comparison.png
+-rw-rw-r-- 1 mei mei  790596 Nov 27 10:15 dashboard_resumo.png
+-rw-rw-r-- 1 mei mei  241999 Nov 27 13:55 heatmap_L1.png
+-rw-rw-r-- 1 mei mei  239032 Nov 27 13:55 heatmap_L2.png
+-rw-rw-r-- 1 mei mei   54568 Nov 27 13:55 hist_L1.png
+-rw-rw-r-- 1 mei mei   51464 Nov 27 13:55 hist_L2.png
+-rw-rw-r-- 1 mei mei  128281 Nov 27 10:19 kmapper_distancia_2013.html
+-rw-rw-r-- 1 mei mei  202729 Nov 27 10:19 kmapper_l2norm_2013.html
+-rw-rw-r-- 1 mei mei  590784 Nov 27 10:19 kmapper_pca_2013.html
+-rw-rw-r-- 1 mei mei  590852 Nov 27 10:19 kmapper_tsne_2013.html
+-rw-rw-r-- 1 mei mei  153939 Nov 27 10:14 matriz_distancia_L1.csv
+-rw-rw-r-- 1 mei mei  159287 Nov 27 10:14 matriz_distancia_L2.csv
+-rw-rw-r-- 1 mei mei   59840 Nov 27 13:55 stats_summary.png
+-rw-rw-r-- 1 mei mei  423314 Nov 27 10:14 tarefa1_curvas_por_ano.png
+-rw-rw-r-- 1 mei mei  203731 Nov 27 10:14 tarefa1_periodo_epidemico_rj_2013.png
+-rw-rw-r-- 1 mei mei  132593 Nov 27 10:14 tarefa1_semanas_por_ano.png
+-rw-rw-r-- 1 mei mei  247884 Nov 27 10:14 tarefa1_top_municipios_2013.png
+-rw-rw-r-- 1 mei mei  183464 Nov 27 10:14 tarefa1_transicoes_anos.png
+-rw-rw-r-- 1 mei mei  318796 Nov 27 10:14 tarefa2_comparacao_normalizacao_2013.png
+-rw-rw-r-- 1 mei mei  620012 Nov 27 10:14 tarefa2_curvas_normalizadas_2013.png
+-rw-rw-r-- 1 mei mei  360876 Nov 27 10:14 tarefa2_taxa_incidencia_2013.png
+-rw-rw-r-- 1 mei mei  167175 Nov 27 10:14 tarefa3_distribuicao_distancias_2013.png
+-rw-rw-r-- 1 mei mei  455091 Nov 27 10:15 tarefa3_heatmap_L1_2013.png
+-rw-rw-r-- 1 mei mei  466404 Nov 27 10:15 tarefa3_heatmap_L2_2013.png
+-rw-rw-r-- 1 mei mei  713104 Nov 27 10:14 tarefa3_pares_similares_2013.png
+-rw-rw-r-- 1 mei mei  251835 Nov 27 10:15 tarefa3_ranking_sincronizacao_2013.png
+-rw-rw-r-- 1 mei mei  266724 Nov 27 10:15 tarefa4_analise_limiares_2013.png
+-rw-rw-r-- 1 mei mei  201046 Nov 27 10:15 tarefa4_clusters_2013.png
+-rw-rw-r-- 1 mei mei  175346 Nov 27 10:15 tarefa4_clusters_otimos_2013.png
+-rw-rw-r-- 1 mei mei 3193106 Nov 27 10:15 tarefa4_complexo_grafo_2013.png
+-rw-rw-r-- 1 mei mei  116290 Nov 27 13:55 top_pairs_L1.png
+-rw-rw-r-- 1 mei mei  120146 Nov 27 13:55 top_pairs_L2.png
+
+./scripts:
+total 32
+-rw-rw-r-- 1 mei mei 11411 Dec 18 12:23 generate_visualizations.py
+-rw-rw-r-- 1 mei mei 18228 Dec 18 12:19 main.py
+
+./src:
+total 148
+-rw-rw-r-- 1 mei mei   109 Nov 27 09:52 __init__.py
+-rw-rw-r-- 1 mei mei  3631 Dec 18 13:28 pipeline.py
+drwxrwxr-x 2 mei mei  4096 Dec 18 13:26 __pycache__
+-rw-rw-r-- 1 mei mei 10901 Nov 27 10:00 tarefa0_carregar_dados.py
+-rw-rw-r-- 1 mei mei 13939 Nov 27 10:01 tarefa1_semanas_epidemiologicas.py
+-rw-rw-r-- 1 mei mei 19027 Nov 27 10:03 tarefa2_normalizacao.py
+-rw-rw-r-- 1 mei mei 14439 Nov 27 10:04 tarefa3_distancias.py
+-rw-rw-r-- 1 mei mei 16175 Nov 27 10:08 tarefa4_complexo_simplicial.py
+-rw-rw-r-- 1 mei mei 13972 Nov 27 10:19 tarefa5_kmapper.py
+-rw-rw-r-- 1 mei mei  3828 Nov 27 09:56 utils.py
+-rw-rw-r-- 1 mei mei 32803 Nov 27 10:13 visualizacoes.py
+
+./src/__pycache__:
+total 168
+-rw-rw-r-- 1 mei mei   215 Dec 18 13:26 __init__.cpython-312.pyc
+-rw-rw-r-- 1 mei mei  3484 Dec 18 13:26 pipeline.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 12074 Nov 27 10:00 tarefa0_carregar_dados.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 16974 Nov 27 10:07 tarefa1_semanas_epidemiologicas.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 22888 Nov 27 10:08 tarefa2_normalizacao.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 16676 Nov 27 10:08 tarefa3_distancias.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 19905 Nov 27 10:14 tarefa4_complexo_simplicial.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 15377 Dec 18 13:26 tarefa5_kmapper.cpython-312.pyc
+-rw-rw-r-- 1 mei mei 45706 Nov 27 10:14 visualizacoes.cpython-312.pyc

@@ -3,6 +3,9 @@ Dengue Analysis Pipeline
 Centraliza o fluxo de dados, análise e visualização para uso em scripts e notebooks.
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.tarefa0_carregar_dados import load_and_merge_dengue_data
 from src.tarefa1_semanas_epidemiologicas import get_weeks_per_year, identify_years_with_53_weeks
 from src.tarefa2_normalizacao import POPULACAO_CENSO_2010, normalize_by_population, normalize_by_total_infected, normalize_all_series_by_total
@@ -33,7 +36,16 @@ def run_all_analyses(df, year=2013):
             for semana, valor in zip(df_year[df_year['municipio'] == mun]['semana_epi'].values, taxa):
                 taxas_incidencia.append({'municipio': mun, 'semana_epi': semana, 'taxa_incidencia': valor})
     norm_pop = pd.DataFrame(taxas_incidencia)
-    norm_unit = normalize_all_series_by_total(df_year)
+    # Garante que a coluna 'casos' é numérica
+    df_year['casos'] = pd.to_numeric(df_year['casos'], errors='coerce')
+    # Cria dicionário {municipio: array de casos} para normalização
+    series_dict = {}
+    for mun in df_year['municipio'].unique():
+        arr = df_year[df_year['municipio'] == mun]['casos'].values
+        arr = pd.to_numeric(arr, errors='coerce')
+        arr = np.array(arr, dtype=np.float64)
+        series_dict[mun] = arr
+    norm_unit = normalize_all_series_by_total(series_dict)
     md1, md2, mun_list = compute_both_distance_matrices(norm_unit)
     similar_pairs = find_most_similar_pairs(md1, mun_list)
     dissimilar_pairs = find_most_dissimilar_pairs(md1, mun_list)

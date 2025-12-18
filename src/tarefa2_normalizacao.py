@@ -22,8 +22,9 @@ from pathlib import Path
 from typing import Dict, Tuple, Optional
 
 import sys
-sys.path.insert(0, str(Path(__file__).parent))
-from tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
 
 # Dados de população do Censo 2010 para municípios do RJ
 # Fonte: IBGE - Censo Demográfico 2010
@@ -171,6 +172,9 @@ def normalize_by_total_infected(series: np.ndarray) -> np.ndarray:
     np.ndarray
         Série normalizada com área unitária.
     """
+    # Garante que a série é numérica
+    # Garante array NumPy float64
+    series = np.array(pd.to_numeric(series, errors='coerce'), dtype=np.float64)
     total = np.sum(series)
     if total == 0:
         return np.zeros_like(series)
@@ -385,7 +389,9 @@ def normalize_all_series_by_total(time_series: Dict[str, np.ndarray]) -> Dict[st
     normalized = {}
     
     for municipality, series in time_series.items():
-        normalized[municipality] = normalize_by_total_infected(series)
+        # Garante que a série é numérica
+        series_numeric = pd.to_numeric(series, errors='coerce')
+        normalized[municipality] = normalize_by_total_infected(series_numeric)
         
         # Verificar área unitária
         if not verify_unit_area(normalized[municipality]):

@@ -20,8 +20,9 @@ from pathlib import Path
 from epiweeks import Week, Year
 
 import sys
-sys.path.insert(0, str(Path(__file__).parent))
-from tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
 
 
 def get_weeks_per_year(start_year: int = 2010, end_year: int = 2016) -> dict:

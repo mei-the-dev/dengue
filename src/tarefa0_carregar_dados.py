@@ -43,7 +43,16 @@ def load_and_merge_dengue_data(filepath: str = None) -> pd.DataFrame:
         - casos: Número de casos de dengue
     """
     if filepath is None:
-        filepath = Path(__file__).parent.parent / "Dengue_Brasil_2010-2016_RJ.xlsx"
+        # Tenta ../data/ para scripts, ../../data/ para notebooks, senão raiz do projeto
+        data_path = Path(__file__).parent.parent / "data" / "Dengue_Brasil_2010-2016_RJ.xlsx"
+        if data_path.exists():
+            filepath = data_path
+        else:
+            alt_path = Path(__file__).parent.parent.parent / "data" / "Dengue_Brasil_2010-2016_RJ.xlsx"
+            if alt_path.exists():
+                filepath = alt_path
+            else:
+                filepath = Path(__file__).parent.parent / "Dengue_Brasil_2010-2016_RJ.xlsx"
     
     xlsx = pd.ExcelFile(filepath)
     all_data = []

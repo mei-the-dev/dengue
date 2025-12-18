@@ -19,9 +19,10 @@ from pathlib import Path
 import seaborn as sns
 
 import sys
-sys.path.insert(0, str(Path(__file__).parent))
-from tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
-from tarefa2_normalizacao import normalize_all_series_by_total, POPULACAO_CENSO_2010
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.tarefa0_carregar_dados import load_and_merge_dengue_data, get_yearly_time_series
+from src.tarefa2_normalizacao import normalize_all_series_by_total, POPULACAO_CENSO_2010
 
 
 def l1_distance(series1: np.ndarray, series2: np.ndarray) -> float:

@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Epidemiológica de Dengue | Rio de Janeiro 2010-2016</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-light: #14b8a6;
+            --primary-dark: #0f766e;
+            --secondary: #f59e0b;
+            --accent: #ef4444;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .nav-brand i {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--light);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 6rem 2rem 4rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230d9488' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(13, 148, 136, 0.2);
+            color: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(13, 148, 136, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--light) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        /* Section Headers */
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-number {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary-light);
+            background: rgba(13, 148, 136, 0.15);
+            padding: 0.35rem 0.75rem;
+            border-radius: 0.35rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--dark);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Image Grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .image-card {
+            background: var(--dark);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-card-content {
+            padding: 1.25rem;
+        }
+
+        .image-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* Full Width Image */
+        .full-image {
+            background: var(--dark);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .full-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* KeplerMapper Section */
+        .kmapper-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .kmapper-card {
+            background: var(--dark);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .kmapper-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .kmapper-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .kmapper-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .kmapper-link:hover {
+            text-decoration: underline;
+        }
+
+        .kmapper-preview {
+            height: 400px;
+            background: #fff;
+        }
+
+        .kmapper-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, var(--dark) 0%, rgba(13, 148, 136, 0.1) 100%);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            text-align: center;
+        }
+
+        .stats-card .value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-light);
+        }
+
+        .stats-card .label {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--dark);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .data-table th {
+            background: rgba(13, 148, 136, 0.15);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+        }
+
+        .data-table td {
+            padding: 0.875rem 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .data-table .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--secondary);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--darker);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block .comment {
+            color: var(--gray);
+        }
+
+        .code-block .keyword {
+            color: var(--accent);
+        }
+
+        .code-block .function {
+            color: var(--primary-light);
+        }
+
+        .code-block .string {
+            color: var(--success);
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .two-col.reverse {
+            direction: rtl;
+        }
+
+        .two-col.reverse > * {
+            direction: ltr;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.15) 0%, rgba(13, 148, 136, 0.05) 100%);
+            border: 1px solid rgba(13, 148, 136, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-light);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .highlight-box ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .highlight-box li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .highlight-box li i {
+            color: var(--primary-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: rgba(13, 148, 136, 0.2);
+            color: var(--primary-light);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--secondary);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Scroll to top */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .kmapper-grid {
+                grid-template-columns: 1fr;
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">
+            <i class="fas fa-virus"></i>
+            <span>Dengue RJ</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#intro">Introdução</a></li>
+            <li><a href="#dados">Dados</a></li>
+            <li><a href="#normalizacao">Normalização</a></li>
+            <li><a href="#distancias">Distâncias</a></li>
+            <li><a href="#tda">TDA</a></li>
+            <li><a href="#clusters">Clusters</a></li>
+            <li><a href="#kmapper">KeplerMapper</a></li>
+            <li><a href="#conclusoes">Conclusões</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-microscope"></i>
+                Topological Data Analysis
+            </div>
+            <h1>Análise Epidemiológica<br>de Dengue</h1>
+            <h2>Estado do Rio de Janeiro • 2010–2016</h2>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">91</div>
+                    <div class="stat-label">Municípios</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Anos</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">52</div>
+                    <div class="stat-label">Semanas/Ano</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">2013</div>
+                    <div class="stat-label">Ano Focal</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section id="intro">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2>Introdução</h2>
+                <p>Objetivos e metodologia do estudo epidemiológico</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>Objetivo</h3>
+                    <p>Identificar padrões temporais e espaciais de sincronização epidêmica entre municípios do RJ usando técnicas de Análise Topológica de Dados (TDA).</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-database"></i></div>
+                    <h3>Fonte de Dados</h3>
+                    <p>DATASUS/SINAN - Sistema de Informação de Agravos de Notificação. Casos confirmados de dengue por semana epidemiológica.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Metodologia</h3>
+                    <p>Normalização de séries, cálculo de distâncias L1/L2, construção de complexos simpliciais, PCA e clusterização.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h3>Semanas Epidemiológicas</h3>
+                    <p>Padrão OMS/CDC: semanas de domingo a sábado, numeradas de 1 a 52/53 por ano epidemiológico.</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <div class="full-image">
+                    <img src="output/apresentacao_dados_gerais.png" alt="Dados Gerais">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dados -->
+    <section id="dados">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2>Exploração dos Dados</h2>
+                <p>Visão geral das curvas epidêmicas e identificação do período de estudo</p>
+            </div>
+
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="output/apresentacao_curvas_ano.png" alt="Curvas por Ano">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-chart-area"></i> Curvas Epidêmicas por Ano</h3>
+                        <p>Comparação da evolução temporal de casos entre 2010-2016. O ano de 2013 apresentou o maior pico epidêmico.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/tarefa1_periodo_epidemico_rj_2013.png" alt="Período Epidêmico 2013">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-virus"></i> Período Epidêmico 2013</h3>
+                        <p>Delimitação do período epidêmico (PE) para o ano focal, com identificação do início e fim da epidemia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="image-grid">
+                    <div class="image-card">
+                        <img src="output/tarefa1_top_municipios_2013.png" alt="Top Municípios 2013">
+                        <div class="image-card-content">
+                            <h3><i class="fas fa-city"></i> Top Municípios em Casos (2013)</h3>
+                            <p>Ranking dos municípios com maior número absoluto de casos notificados.</p>
+                        </div>
+                    </div>
+                    <div class="image-card">
+                        <img src="output/apresentacao_incidencia.png" alt="Taxa de Incidência">
+                        <div class="image-card-content">
+                            <h3><i class="fas fa-users"></i> Taxa de Incidência</h3>
+                            <p>Casos por 100.000 habitantes - normalização pela população do Censo 2010.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Normalização -->
+    <section id="normalizacao">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2>Normalização das Séries</h2>
+                <p>Métodos para comparação justa entre municípios de diferentes tamanhos</p>
+            </div>
+
+            <div class="two-col">
+                <div>
+                    <div class="highlight-box">
+                        <h4><i class="fas fa-divide"></i> Taxa de Incidência</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Casos ÷ População × 100.000</li>
+                            <li><i class="fas fa-check"></i> Permite comparar municípios de diferentes tamanhos</li>
+                            <li><i class="fas fa-check"></i> Padrão epidemiológico internacional</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box" style="margin-top: 1rem;">
+                        <h4><i class="fas fa-chart-area"></i> Área Unitária</h4>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Normaliza pelo total de casos no período</li>
+                            <li><i class="fas fa-check"></i> Soma da série = 1 (área unitária)</li>
+                            <li><i class="fas fa-check"></i> Foca no padrão temporal, não na magnitude</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="full-image" style="margin-bottom: 0;">
+                    <img src="output/tarefa2_comparacao_normalizacao_2013.png" alt="Comparação de Normalização">
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="full-image">
+                    <img src="output/tarefa2_curvas_normalizadas_2013.png" alt="Curvas Normalizadas">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Distâncias -->
+    <section id="distancias">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2>Cálculo de Distâncias</h2>
+                <p>Medindo a similaridade entre séries temporais epidêmicas</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <div class="value">90×90</div>
+                    <div class="label">Matriz de Distância</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">4.005</div>
+                    <div class="label">Pares Únicos</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">L1 + L2</div>
+                    <div class="label">Métricas</div>
+                </div>
+                <div class="stats-card">
+                    <div class="value">0.12</div>
+                    <div class="label">Distância Mínima</div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="highlight-box">
+                    <h4><i class="fas fa-ruler-horizontal"></i> Distância L1 (Manhattan)</h4>
+                    <p style="margin-bottom: 1rem; color: var(--gray);">Soma dos valores absolutos das diferenças:</p>
+                    <div class="code-block">
+d<sub>L1</sub>(x, y) = Σ |x<sub>i</sub> - y<sub>i</sub>|
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--gray);">
+                        Mais robusta a outliers. Penaliza igualmente desvios pequenos e grandes.
+                    </p>
+                </div>
+                <div class="highlight-box">
+                    <h4><i class="fas fa-ruler-combined"></i> Distância L2 (Euclidiana)</h4>
+                    <p style="margin-bottom: 1rem; color: var(--gray);">Raiz da soma dos quadrados:</p>
+                    <div class="code-block">
+d<sub>L2</sub>(x, y) = √(Σ (x<sub>i</sub> - y<sub>i</sub>)²)
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--gray);">
+                        Penaliza mais fortemente grandes desvios. Padrão geométrico.
+                    </p>
+                </div>
+            </div>
+
+            <div class="image-grid" style="margin-top: 2rem;">
+                <div class="image-card">
+                    <img src="output/heatmap_L1.png" alt="Heatmap L1">
+                    <div class="image-card-content">
+                        <h3>Matriz de Distância L1</h3>
+                        <p>Heatmap mostrando similaridade entre todos os pares de municípios (Manhattan).</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/heatmap_L2.png" alt="Heatmap L2">
+                    <div class="image-card-content">
+                        <h3>Matriz de Distância L2</h3>
+                        <p>Heatmap mostrando similaridade entre todos os pares de municípios (Euclidiana).</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-grid" style="margin-top: 2rem;">
+                <div class="image-card">
+                    <img src="output/hist_L1.png" alt="Histograma L1">
+                    <div class="image-card-content">
+                        <h3>Distribuição das Distâncias L1</h3>
+                        <p>Histograma com média e mediana destacadas.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/hist_L2.png" alt="Histograma L2">
+                    <div class="image-card-content">
+                        <h3>Distribuição das Distâncias L2</h3>
+                        <p>Histograma com média e mediana destacadas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="full-image">
+                    <img src="output/boxplot_comparison.png" alt="Comparação Boxplot">
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="full-image">
+                    <img src="output/top_pairs_L1.png" alt="Top Pares L1">
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="full-image">
+                    <img src="output/apresentacao_pares_sincronizados.png" alt="Pares Sincronizados">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TDA -->
+    <section id="tda">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">05</span>
+                <h2>Análise Topológica de Dados</h2>
+                <p>Complexos simpliciais e estrutura topológica das epidemias</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-circle"></i></div>
+                    <h3>0-Simplex (Vértice)</h3>
+                    <p>Cada município representa um vértice no complexo simplicial.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-minus"></i></div>
+                    <h3>1-Simplex (Aresta)</h3>
+                    <p>Conexão entre municípios com distância abaixo do limiar ε.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-play"></i></div>
+                    <h3>2-Simplex (Triângulo)</h3>
+                    <p>Três municípios mutuamente conectados formam um triângulo.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-shapes"></i></div>
+                    <h3>Complexo de Vietoris-Rips</h3>
+                    <p>Construção do complexo a partir da matriz de distâncias.</p>
+                </div>
+            </div>
+
+            <div class="image-grid" style="margin-top: 2rem;">
+                <div class="image-card">
+                    <img src="output/apresentacao_complexo_simplicial.png" alt="Complexo Simplicial">
+                    <div class="image-card-content">
+                        <h3>Visualização do Complexo Simplicial</h3>
+                        <p>Representação gráfica do complexo construído a partir das distâncias L2.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/apresentacao_simplicial_limiares.png" alt="Análise de Limiares">
+                    <div class="image-card-content">
+                        <h3>Análise de Limiares</h3>
+                        <p>Evolução do número de componentes e arestas em função do limiar ε.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <div class="full-image">
+                    <img src="output/tarefa4_analise_limiares_2013.png" alt="Análise de Limiares Detalhada">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clusters -->
+    <section id="clusters">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">06</span>
+                <h2>Clusterização</h2>
+                <p>Identificação de grupos de municípios com padrões epidêmicos similares</p>
+            </div>
+
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="output/apresentacao_pca_variancia.png" alt="PCA Variância">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-chart-pie"></i> PCA - Variância Explicada</h3>
+                        <p>Análise de componentes principais para redução dimensional.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/apresentacao_pca_projecao.png" alt="PCA Projeção">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-project-diagram"></i> Projeção PCA 2D</h3>
+                        <p>Municípios projetados nos dois primeiros componentes principais.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-image" style="margin-top: 2rem;">
+                <img src="output/apresentacao_clusters_pca.png" alt="Clusters PCA">
+            </div>
+
+            <div class="image-grid" style="margin-top: 2rem;">
+                <div class="image-card">
+                    <img src="output/apresentacao_kmeans_avaliacao.png" alt="K-Means Avaliação">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-bullseye"></i> Avaliação K-Means</h3>
+                        <p>Método do cotovelo e silhouette score para determinar k ótimo.</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="output/apresentacao_dendrograma.png" alt="Dendrograma">
+                    <div class="image-card-content">
+                        <h3><i class="fas fa-sitemap"></i> Clustering Hierárquico</h3>
+                        <p>Dendrograma mostrando a estrutura hierárquica dos clusters.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="full-image" style="margin-top: 2rem;">
+                <img src="output/apresentacao_perfis_clusters.png" alt="Perfis dos Clusters">
+            </div>
+
+            <div class="highlight-box" style="margin-top: 2rem;">
+                <h4><i class="fas fa-info-circle"></i> Interpretação dos Clusters</h4>
+                <ul>
+                    <li><i class="fas fa-circle" style="color: #3498db;"></i> <strong>Cluster 0:</strong> Epidemia tardia - pico no final do período epidêmico</li>
+                    <li><i class="fas fa-circle" style="color: #e74c3c;"></i> <strong>Cluster 1:</strong> Epidemia precoce - pico no início do período</li>
+                    <li><i class="fas fa-circle" style="color: #2ecc71;"></i> <strong>Cluster 2:</strong> Padrão bimodal - dois picos distintos</li>
+                    <li><i class="fas fa-circle" style="color: #9b59b6;"></i> <strong>Cluster 3:</strong> Epidemia prolongada - distribuição mais uniforme</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- KeplerMapper -->
+    <section id="kmapper">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">07</span>
+                <h2>KeplerMapper</h2>
+                <p>Visualização topológica interativa dos dados epidemiológicos</p>
+            </div>
+
+            <div class="highlight-box" style="margin-bottom: 2rem;">
+                <h4><i class="fas fa-network-wired"></i> O que é KeplerMapper?</h4>
+                <p style="color: var(--gray); margin-bottom: 1rem;">
+                    KeplerMapper é uma implementação Python do algoritmo Mapper para TDA. 
+                    Ele cria uma rede simplificada que preserva a estrutura topológica dos dados,
+                    permitindo identificar clusters, loops e estruturas de alta dimensão.
+                </p>
+                <ul>
+                    <li><i class="fas fa-check"></i> <strong>Nós:</strong> Representam grupos de municípios similares</li>
+                    <li><i class="fas fa-check"></i> <strong>Arestas:</strong> Conectam grupos com municípios em comum</li>
+                    <li><i class="fas fa-check"></i> <strong>Cores:</strong> Indicam propriedades médias (distância, componente PCA)</li>
+                    <li><i class="fas fa-check"></i> <strong>Tamanho:</strong> Proporcional ao número de municípios no grupo</li>
+                </ul>
+            </div>
+
+            <div class="kmapper-grid">
+                <div class="kmapper-card">
+                    <div class="kmapper-header">
+                        <h3><i class="fas fa-project-diagram"></i> KeplerMapper - PCA</h3>
+                        <a href="output/kmapper_pca_2013.html" target="_blank" class="kmapper-link">
+                            Abrir em nova aba <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                    <div class="kmapper-preview">
+                        <iframe src="output/kmapper_pca_2013.html"></iframe>
+                    </div>
+                </div>
+                <div class="kmapper-card">
+                    <div class="kmapper-header">
+                        <h3><i class="fas fa-ruler"></i> KeplerMapper - Distância L2</h3>
+                        <a href="output/kmapper_distancia_2013.html" target="_blank" class="kmapper-link">
+                            Abrir em nova aba <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                    <div class="kmapper-preview">
+                        <iframe src="output/kmapper_distancia_2013.html"></iframe>
+                    </div>
+                </div>
+                <div class="kmapper-card">
+                    <div class="kmapper-header">
+                        <h3><i class="fas fa-compress-arrows-alt"></i> KeplerMapper - t-SNE</h3>
+                        <a href="output/kmapper_tsne_2013.html" target="_blank" class="kmapper-link">
+                            Abrir em nova aba <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                    <div class="kmapper-preview">
+                        <iframe src="output/kmapper_tsne_2013.html"></iframe>
+                    </div>
+                </div>
+                <div class="kmapper-card">
+                    <div class="kmapper-header">
+                        <h3><i class="fas fa-chart-line"></i> KeplerMapper - L2 Normalizado</h3>
+                        <a href="output/kmapper_l2norm_2013.html" target="_blank" class="kmapper-link">
+                            Abrir em nova aba <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                    <div class="kmapper-preview">
+                        <iframe src="output/kmapper_l2norm_2013.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusões -->
+    <section id="conclusoes">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">08</span>
+                <h2>Conclusões</h2>
+                <p>Principais descobertas e contribuições do estudo</p>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);"><i class="fas fa-check-double"></i></div>
+                    <h3>Padrões Identificados</h3>
+                    <p>Clusters bem definidos de municípios com comportamentos epidêmicos similares, sugerindo fatores regionais comuns.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fas fa-link"></i></div>
+                    <h3>Sincronização</h3>
+                    <p>Pares de municípios altamente sincronizados foram identificados, potencialmente devido a mobilidade urbana ou condições climáticas.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fas fa-lightbulb"></i></div>
+                    <h3>Metodologia</h3>
+                    <p>TDA provou-se eficaz para análise epidemiológica, oferecendo insights não capturados por métodos tradicionais.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-heartbeat"></i></div>
+                    <h3>Aplicação</h3>
+                    <p>Resultados podem orientar políticas de saúde pública coordenadas entre municípios do mesmo cluster.</p>
+                </div>
+            </div>
+
+            <div class="two-col" style="margin-top: 3rem;">
+                <div class="highlight-box">
+                    <h4><i class="fas fa-flask"></i> Trabalhos Futuros</h4>
+                    <ul>
+                        <li><i class="fas fa-arrow-right"></i> Incluir dados climáticos (precipitação, temperatura)</li>
+                        <li><i class="fas fa-arrow-right"></i> Análise de persistência homológica</li>
+                        <li><i class="fas fa-arrow-right"></i> Modelos preditivos por cluster</li>
+                        <li><i class="fas fa-arrow-right"></i> Expandir para outros estados</li>
+                        <li><i class="fas fa-arrow-right"></i> Integrar dados de mobilidade urbana</li>
+                    </ul>
+                </div>
+                <div class="highlight-box">
+                    <h4><i class="fas fa-tools"></i> Tecnologias Utilizadas</h4>
+                    <ul>
+                        <li><i class="fab fa-python"></i> Python 3.12</li>
+                        <li><i class="fas fa-chart-bar"></i> Pandas, NumPy, Matplotlib, Seaborn</li>
+                        <li><i class="fas fa-brain"></i> Scikit-learn (PCA, K-Means, DBSCAN)</li>
+                        <li><i class="fas fa-project-diagram"></i> KeplerMapper (TDA)</li>
+                        <li><i class="fas fa-file-code"></i> Jupyter Notebook</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="full-image" style="margin-top: 2rem;">
+                <img src="output/dashboard_resumo.png" alt="Dashboard Resumo">
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            <i class="fab fa-github"></i> 
+            <a href="https://github.com/mei-the-dev/dengue" target="_blank">github.com/mei-the-dev/dengue</a>
+            <br><br>
+            Análise Epidemiológica de Dengue • Rio de Janeiro 2010–2016<br>
+            Novembro 2025
+        </p>
+    </footer>
+
+    <!-- Scroll to top button -->
+    <button class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Scroll to top button visibility
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.querySelector('.scroll-top');
+            if (window.scrollY > 500) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
+
+        // Active navigation link
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', function() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Epidemiológica de Dengue | Rio de Janeiro 2010-2016</title>
+    
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+    
+    <!-- Google Fonts - Refined Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ========================================
+           OCHRE COLOR PALETTE
+           ======================================== */
+        :root {
+            --ochre-50: #fef9f3;
+            --ochre-100: #fdf0e1;
+            --ochre-200: #fbe0c3;
+            --ochre-300: #f7c896;
+            --ochre-400: #f2a855;
+            --ochre-500: #CC7722;  /* Main ochre */
+            --ochre-600: #B8860B;  /* Dark goldenrod */
+            --ochre-700: #8B6914;
+            --ochre-800: #6B5010;
+            --ochre-900: #4a3709;
+            
+            --cream: #FDF8F0;
+            --warm-white: #FFFEF9;
+            --charcoal: #2C2416;
+            --dark-brown: #1a1510;
+            --accent-rust: #A0522D;
+            --accent-gold: #DAA520;
+            --accent-bronze: #CD853F;
+            
+            --gradient-ochre: linear-gradient(135deg, var(--ochre-500) 0%, var(--ochre-600) 50%, var(--accent-rust) 100%);
+            --gradient-warm: linear-gradient(135deg, var(--ochre-100) 0%, var(--ochre-200) 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark-brown) 0%, var(--charcoal) 100%);
+        }
+
+        /* ========================================
+           TYPOGRAPHY VARIABLES
+           ======================================== */
+        :root {
+            --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+
+        /* ========================================
+           REVEAL.JS OVERRIDES
+           ======================================== */
+        .reveal-viewport {
+            background: var(--gradient-dark);
+        }
+        
+        .reveal {
+            font-family: var(--font-sans);
+            font-size: 30px;
+            color: var(--cream);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+        
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            font-family: var(--font-serif);
+            font-weight: 600;
+            color: var(--ochre-400);
+            text-transform: none;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+        
+        .reveal h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            text-shadow: 0 4px 30px rgba(204, 119, 34, 0.3);
+        }
+        
+        .reveal h2 {
+            font-size: 1.8em;
+            margin-bottom: 0.6em;
+        }
+        
+        .reveal h3 {
+            font-size: 1.3em;
+            color: var(--ochre-300);
+            font-weight: 500;
+        }
+        
+        .reveal p, .reveal li {
+            line-height: 1.7;
+            font-weight: 400;
+        }
+        
+        .reveal a {
+            color: var(--ochre-400);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .reveal a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* ========================================
+           CUSTOM ANIMATIONS
+           ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ========================================
+           SLIDE BACKGROUNDS
+           ======================================== */
+        .reveal .slides section {
+            padding: 40px;
+        }
+        
+        .reveal .slides section[data-background-gradient] {
+            color: var(--cream);
+        }
+
+        /* Title slide special styling */
+        .title-slide {
+            text-align: center;
+        }
+        
+        .title-slide h1 {
+            font-size: 3.5em;
+            margin-bottom: 0.3em;
+            background: linear-gradient(135deg, var(--ochre-300), var(--accent-gold), var(--ochre-400));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.4em;
+            color: var(--ochre-200);
+            font-weight: 300;
+            margin-bottom: 2em;
+        }
+        
+        .title-slide .meta {
+            display: flex;
+            justify-content: center;
+            gap: 3em;
+            margin-top: 2em;
+        }
+        
+        .title-slide .meta-item {
+            text-align: center;
+        }
+        
+        .title-slide .meta-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--ochre-400);
+            display: block;
+            font-family: var(--font-serif);
+        }
+        
+        .title-slide .meta-label {
+            font-size: 0.7em;
+            color: var(--ochre-200);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* ========================================
+           COMPONENT STYLES
+           ======================================== */
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            background: rgba(204, 119, 34, 0.2);
+            border: 1px solid rgba(204, 119, 34, 0.4);
+            color: var(--ochre-300);
+            padding: 0.4em 1em;
+            border-radius: 2em;
+            font-size: 0.6em;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(44, 36, 22, 0.6);
+            border: 1px solid rgba(204, 119, 34, 0.2);
+            border-radius: 1em;
+            padding: 1.6em;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card:hover {
+            border-color: var(--ochre-500);
+            transform: translateY(-6px);
+            box-shadow: 
+                0 20px 40px rgba(204, 119, 34, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+        
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--gradient-ochre);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            margin-bottom: 1em;
+            box-shadow: 0 8px 20px rgba(204, 119, 34, 0.3);
+        }
+        
+        .card h4 {
+            color: var(--ochre-300);
+            font-size: 0.95em;
+            margin-bottom: 0.6em;
+            font-family: var(--font-serif);
+        }
+        
+        .card p {
+            font-size: 0.68em;
+            color: var(--ochre-100);
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+        
+        /* Cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.6em;
+            margin-top: 1.2em;
+        }
+        
+        .cards-grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .cards-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 2.2em;
+            margin: 1.6em 0;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 1.3em 2.2em;
+            background: linear-gradient(135deg, rgba(204, 119, 34, 0.12), rgba(204, 119, 34, 0.05));
+            border: 1px solid rgba(204, 119, 34, 0.3);
+            border-radius: 1em;
+            min-width: 120px;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--ochre-400);
+            font-family: var(--font-serif);
+        }
+        
+        .stat-label {
+            font-size: 0.55em;
+            color: var(--ochre-200);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Images */
+        .img-container {
+            background: var(--charcoal);
+            border-radius: 1em;
+            overflow: hidden;
+            border: 1px solid rgba(204, 119, 34, 0.25);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .img-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 8px 30px rgba(204, 119, 34, 0.2),
+                0 25px 70px rgba(0, 0, 0, 0.5);
+        }
+        
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: filter 0.3s ease;
+        }
+        
+        .img-container:hover img {
+            filter: brightness(1.05);
+        }
+        
+        .img-caption {
+            padding: 0.9em 1.2em;
+            background: linear-gradient(180deg, rgba(26, 21, 16, 0.85), rgba(26, 21, 16, 0.95));
+            font-size: 0.6em;
+            color: var(--ochre-200);
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            border-top: 1px solid rgba(204, 119, 34, 0.15);
+        }
+        
+        .img-caption i {
+            color: var(--ochre-400);
+        }
+
+        /* Two column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5em;
+            align-items: center;
+        }
+        
+        .two-col.wide-left {
+            grid-template-columns: 1.6fr 1fr;
+        }
+        
+        .two-col.wide-right {
+            grid-template-columns: 1fr 1.6fr;
+        }
+
+        /* Highlight boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(204, 119, 34, 0.12), rgba(204, 119, 34, 0.04));
+            border-left: 4px solid var(--ochre-500);
+            padding: 1.3em 1.6em;
+            border-radius: 0 1em 1em 0;
+            margin: 1em 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .highlight-box h4 {
+            font-size: 0.85em;
+            color: var(--ochre-400);
+            margin-bottom: 0.5em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-family: var(--font-serif);
+        }
+        
+        .highlight-box ul {
+            margin: 0;
+            padding-left: 1.2em;
+        }
+        
+        .highlight-box li {
+            font-size: 0.65em;
+            margin-bottom: 0.5em;
+            color: var(--ochre-100);
+            line-height: 1.5;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--dark-brown);
+            border: 1px solid rgba(204, 119, 34, 0.2);
+            border-radius: 0.8em;
+            padding: 1em 1.5em;
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            color: var(--ochre-200);
+            text-align: left;
+        }
+
+        /* Section headers */
+        .section-header {
+            margin-bottom: 1.5em;
+        }
+        
+        .section-number {
+            display: inline-block;
+            background: var(--gradient-ochre);
+            color: var(--dark-brown);
+            font-weight: 700;
+            padding: 0.3em 0.8em;
+            border-radius: 0.5em;
+            font-size: 0.5em;
+            margin-bottom: 0.5em;
+        }
+
+        /* Lists */
+        .reveal ul, .reveal ol {
+            margin-left: 0;
+        }
+        
+        .reveal li {
+            margin-bottom: 0.5em;
+        }
+        
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .icon-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8em;
+            margin-bottom: 0.8em;
+            font-size: 0.75em;
+        }
+        
+        .icon-list li i {
+            color: var(--ochre-400);
+            margin-top: 0.2em;
+        }
+
+        /* KeplerMapper iframe container */
+        .kmapper-container {
+            background: white;
+            border-radius: 1em;
+            overflow: hidden;
+            border: 2px solid var(--ochre-500);
+            box-shadow: 0 20px 60px rgba(204, 119, 34, 0.2);
+        }
+        
+        .kmapper-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+        
+        .kmapper-header {
+            background: var(--gradient-ochre);
+            padding: 0.6em 1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .kmapper-header h4 {
+            color: var(--dark-brown);
+            font-size: 0.7em;
+            margin: 0;
+        }
+        
+        .kmapper-header a {
+            color: var(--dark-brown);
+            font-size: 0.6em;
+            opacity: 0.8;
+        }
+
+        /* Progress bar override */
+        .reveal .progress {
+            background: rgba(204, 119, 34, 0.2);
+            height: 4px;
+        }
+        
+        .reveal .progress span {
+            background: var(--gradient-ochre);
+        }
+
+        /* Slide number override */
+        .reveal .slide-number {
+            background: rgba(204, 119, 34, 0.3);
+            color: var(--ochre-200);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 8px 0 0 0;
+        }
+
+        /* Controls override */
+        .reveal .controls {
+            color: var(--ochre-500);
+        }
+        
+        .reveal .controls button {
+            color: var(--ochre-400);
+        }
+
+        /* Fragment animations */
+        .reveal .slides section .fragment {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal .slides section .fragment.fade-up {
+            transform: translateY(30px);
+        }
+        
+        .reveal .slides section .fragment.fade-up.visible {
+            transform: translateY(0);
+        }
+
+        /* Decorative elements */
+        .decoration-circle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(204, 119, 34, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* Table styles */
+        .reveal table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 0.7em;
+        }
+        
+        .reveal table th {
+            background: rgba(204, 119, 34, 0.2);
+            color: var(--ochre-300);
+            padding: 0.8em;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .reveal table td {
+            padding: 0.7em 0.8em;
+            border-bottom: 1px solid rgba(204, 119, 34, 0.1);
+        }
+        
+        .reveal table tr:hover td {
+            background: rgba(204, 119, 34, 0.05);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .cards-grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========================================
+           LIGHTBOX / FULLSCREEN IMAGE VIEWER
+           ======================================== */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: zoom-out;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .lightbox-overlay.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+            background: rgba(204, 119, 34, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+            background: var(--ochre-500);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 1rem;
+            font-family: var(--font-sans);
+            padding: 10px 25px;
+            background: rgba(44, 36, 22, 0.9);
+            border-radius: 30px;
+            border: 1px solid rgba(204, 119, 34, 0.4);
+            max-width: 80%;
+            text-align: center;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            background: rgba(204, 119, 34, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-nav:hover {
+            opacity: 1;
+            background: var(--ochre-500);
+        }
+
+        .lightbox-nav.prev { left: 20px; }
+        .lightbox-nav.next { right: 20px; }
+
+        /* Hint for clickable images */
+        .img-container {
+            cursor: zoom-in;
+            position: relative;
+        }
+
+        .img-container::after {
+            content: '\f065';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            background: rgba(204, 119, 34, 0.8);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .img-container:hover::after {
+            opacity: 1;
+        }
+
+        /* Keyboard hint */
+        .lightbox-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+        }
+
+        .lightbox-hint kbd {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin: 0 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            
+            <!-- ============================================
+                 SLIDE 1: TITLE
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 50%, #1a1510 100%)">
+                <div class="title-slide">
+                    <div class="badge fragment fade-up">
+                        <i class="fas fa-microscope"></i>
+                        Topological Data Analysis
+                    </div>
+                    <h1 class="fragment fade-up" data-fragment-index="1">Análise Epidemiológica<br>de Dengue</h1>
+                    <p class="subtitle fragment fade-up" data-fragment-index="2">Estado do Rio de Janeiro • 2010–2016</p>
+                    
+                    <div class="meta fragment fade-up" data-fragment-index="3">
+                        <div class="meta-item">
+                            <span class="meta-value">91</span>
+                            <span class="meta-label">Municípios</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-value">7</span>
+                            <span class="meta-label">Anos</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-value">52</span>
+                            <span class="meta-label">Semanas/Ano</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-value">2013</span>
+                            <span class="meta-label">Ano Focal</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 2: OBJETIVOS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">01</span>
+                    <h2>Objetivos & Metodologia</h2>
+                </div>
+                
+                <div class="cards-grid cards-grid-4">
+                    <div class="card fragment fade-up">
+                        <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                        <h4>Objetivo</h4>
+                        <p>Identificar padrões de sincronização epidêmica entre municípios usando TDA</p>
+                    </div>
+                    <div class="card fragment fade-up" data-fragment-index="1">
+                        <div class="card-icon"><i class="fas fa-database"></i></div>
+                        <h4>Dados</h4>
+                        <p>DATASUS/SINAN - casos confirmados por semana epidemiológica</p>
+                    </div>
+                    <div class="card fragment fade-up" data-fragment-index="2">
+                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4>Métodos</h4>
+                        <p>Normalização, distâncias L1/L2, complexos simpliciais, PCA, clustering</p>
+                    </div>
+                    <div class="card fragment fade-up" data-fragment-index="3">
+                        <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <h4>Semanas Epidemiológicas</h4>
+                        <p>Padrão OMS/CDC: semanas de domingo a sábado</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 3: DADOS - VISÃO GERAL
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <h2>Exploração dos Dados</h2>
+                </div>
+                
+                <div class="img-container fragment fade-up">
+                    <img src="output/apresentacao_dados_gerais.png" alt="Dados Gerais">
+                    <div class="img-caption">
+                        <i class="fas fa-chart-bar"></i>
+                        Visão geral dos casos de dengue no Rio de Janeiro
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 4: CURVAS POR ANO
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Curvas Epidêmicas por Ano</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-left">
+                        <img src="output/apresentacao_curvas_ano.png" alt="Curvas por Ano">
+                    </div>
+                    <div class="fragment fade-right">
+                        <div class="highlight-box">
+                            <h4><i class="fas fa-info-circle"></i> Observações</h4>
+                            <ul>
+                                <li><strong>2013</strong> apresentou o maior pico epidêmico</li>
+                                <li>Padrão sazonal consistente (verão)</li>
+                                <li>Variação significativa entre anos</li>
+                                <li>Início típico: semana epidemiológica 1-5</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-value">2013</div>
+                                <div class="stat-label">Ano crítico</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">SE 10</div>
+                                <div class="stat-label">Pico médio</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 5: PERÍODO EPIDÊMICO 2013
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Período Epidêmico 2013</h3>
+                
+                <div class="two-col wide-right">
+                    <div class="fragment fade-left">
+                        <div class="highlight-box">
+                            <h4><i class="fas fa-calendar-check"></i> Período de Análise</h4>
+                            <ul>
+                                <li>Delimitação do período epidêmico (PE)</li>
+                                <li>Identificação início/fim da epidemia</li>
+                                <li>Base para normalização temporal</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/tarefa1_periodo_epidemico_rj_2013.png" alt="Período Epidêmico 2013">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 6: TOP MUNICÍPIOS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Municípios com Mais Casos</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-up">
+                        <img src="output/tarefa1_top_municipios_2013.png" alt="Top Municípios">
+                        <div class="img-caption">
+                            <i class="fas fa-city"></i>
+                            Ranking por número absoluto de casos
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-up" data-fragment-index="1">
+                        <img src="output/apresentacao_incidencia.png" alt="Incidência">
+                        <div class="img-caption">
+                            <i class="fas fa-users"></i>
+                            Taxa de incidência por 100.000 hab
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 7: NORMALIZAÇÃO
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <h2>Normalização das Séries</h2>
+                </div>
+                
+                <div class="two-col">
+                    <div>
+                        <div class="card fragment fade-up">
+                            <div class="card-icon"><i class="fas fa-divide"></i></div>
+                            <h4>Taxa de Incidência</h4>
+                            <div class="code-block">
+                                Incidência = (Casos / Pop) × 100.000
+                            </div>
+                            <p style="margin-top: 0.8em;">Permite comparar municípios de diferentes tamanhos populacionais</p>
+                        </div>
+                        
+                        <div class="card fragment fade-up" data-fragment-index="1" style="margin-top: 1em;">
+                            <div class="card-icon"><i class="fas fa-chart-area"></i></div>
+                            <h4>Área Unitária</h4>
+                            <div class="code-block">
+                                x_norm[t] = x[t] / Σx
+                            </div>
+                            <p style="margin-top: 0.8em;">Foca no padrão temporal, não na magnitude</p>
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/tarefa2_comparacao_normalizacao_2013.png" alt="Comparação Normalização">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 8: CURVAS NORMALIZADAS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Curvas Normalizadas (2013)</h3>
+                
+                <div class="img-container fragment fade-up">
+                    <img src="output/tarefa2_curvas_normalizadas_2013.png" alt="Curvas Normalizadas">
+                    <div class="img-caption">
+                        <i class="fas fa-chart-line"></i>
+                        Séries temporais normalizadas por área unitária - todos os 91 municípios
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 9: DISTÂNCIAS - CONCEITOS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">04</span>
+                    <h2>Cálculo de Distâncias</h2>
+                </div>
+                
+                <div class="stats-row fragment fade-up">
+                    <div class="stat-card">
+                        <div class="stat-value">90×90</div>
+                        <div class="stat-label">Matriz</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">4.005</div>
+                        <div class="stat-label">Pares únicos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">L1+L2</div>
+                        <div class="stat-label">Métricas</div>
+                    </div>
+                </div>
+                
+                <div class="two-col fragment fade-up" data-fragment-index="1">
+                    <div class="highlight-box">
+                        <h4><i class="fas fa-ruler-horizontal"></i> Distância L1 (Manhattan)</h4>
+                        <div class="code-block" style="margin: 0.8em 0;">
+                            d<sub>L1</sub>(x, y) = Σ |x<sub>i</sub> - y<sub>i</sub>|
+                        </div>
+                        <p style="font-size: 0.6em; color: var(--ochre-200);">Robusta a outliers. Penaliza igualmente desvios.</p>
+                    </div>
+                    <div class="highlight-box">
+                        <h4><i class="fas fa-ruler-combined"></i> Distância L2 (Euclidiana)</h4>
+                        <div class="code-block" style="margin: 0.8em 0;">
+                            d<sub>L2</sub>(x, y) = √(Σ (x<sub>i</sub> - y<sub>i</sub>)²)
+                        </div>
+                        <p style="font-size: 0.6em; color: var(--ochre-200);">Penaliza mais fortemente grandes desvios.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 10: HEATMAPS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Matrizes de Distância</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-left">
+                        <img src="output/heatmap_L1.png" alt="Heatmap L1">
+                        <div class="img-caption">
+                            <i class="fas fa-th"></i>
+                            Matriz L1 (Manhattan)
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/heatmap_L2.png" alt="Heatmap L2">
+                        <div class="img-caption">
+                            <i class="fas fa-th"></i>
+                            Matriz L2 (Euclidiana)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 11: DISTRIBUIÇÃO DE DISTÂNCIAS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Distribuição das Distâncias</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-up">
+                        <img src="output/hist_L1.png" alt="Histograma L1">
+                    </div>
+                    <div class="img-container fragment fade-up" data-fragment-index="1">
+                        <img src="output/hist_L2.png" alt="Histograma L2">
+                    </div>
+                </div>
+                
+                <div class="img-container fragment fade-up" data-fragment-index="2" style="margin-top: 1em;">
+                    <img src="output/boxplot_comparison.png" alt="Comparação Boxplot" style="max-height: 250px; object-fit: contain;">
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 12: PARES SINCRONIZADOS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Pares Mais Sincronizados</h3>
+                
+                <div class="two-col wide-right">
+                    <div class="fragment fade-left">
+                        <div class="highlight-box">
+                            <h4><i class="fas fa-link"></i> Interpretação</h4>
+                            <ul>
+                                <li>Menor distância = maior sincronização</li>
+                                <li>Epidemias simultâneas</li>
+                                <li>Possíveis fatores regionais comuns</li>
+                                <li>Candidatos para ações coordenadas</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/top_pairs_L1.png" alt="Top Pares L1">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 13: TDA - CONCEITOS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">05</span>
+                    <h2>Análise Topológica de Dados</h2>
+                </div>
+                
+                <div class="cards-grid cards-grid-4 fragment fade-up">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-circle"></i></div>
+                        <h4>0-Simplex</h4>
+                        <p>Vértice - cada município</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-minus"></i></div>
+                        <h4>1-Simplex</h4>
+                        <p>Aresta - distância &lt; ε</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-play"></i></div>
+                        <h4>2-Simplex</h4>
+                        <p>Triângulo - 3 conectados</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-shapes"></i></div>
+                        <h4>Vietoris-Rips</h4>
+                        <p>Complexo da matriz</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 14: COMPLEXO SIMPLICIAL
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Complexo Simplicial</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-left">
+                        <img src="output/apresentacao_complexo_simplicial.png" alt="Complexo Simplicial">
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/apresentacao_simplicial_limiares.png" alt="Limiares">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 15: ANÁLISE DE LIMIARES
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Análise de Limiares</h3>
+                
+                <div class="img-container fragment fade-up">
+                    <img src="output/tarefa4_analise_limiares_2013.png" alt="Análise Limiares">
+                    <div class="img-caption">
+                        <i class="fas fa-sliders-h"></i>
+                        Evolução do número de componentes e arestas em função do limiar ε
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 16: PCA
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">06</span>
+                    <h2>Clusterização</h2>
+                </div>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-left">
+                        <img src="output/apresentacao_pca_variancia.png" alt="PCA Variância">
+                        <div class="img-caption">
+                            <i class="fas fa-chart-pie"></i>
+                            Variância explicada por componente
+                        </div>
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/apresentacao_pca_projecao.png" alt="PCA Projeção">
+                        <div class="img-caption">
+                            <i class="fas fa-project-diagram"></i>
+                            Projeção nos 2 primeiros PCs
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 17: CLUSTERS PCA
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Clusters no Espaço PCA</h3>
+                
+                <div class="img-container fragment fade-up">
+                    <img src="output/apresentacao_clusters_pca.png" alt="Clusters PCA">
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 18: K-MEANS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Avaliação K-Means</h3>
+                
+                <div class="two-col">
+                    <div class="img-container fragment fade-left">
+                        <img src="output/apresentacao_kmeans_avaliacao.png" alt="K-Means">
+                    </div>
+                    <div class="img-container fragment fade-right">
+                        <img src="output/apresentacao_dendrograma.png" alt="Dendrograma">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 19: PERFIS DOS CLUSTERS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Perfis Epidêmicos por Cluster</h3>
+                
+                <div class="img-container fragment fade-up">
+                    <img src="output/apresentacao_perfis_clusters.png" alt="Perfis Clusters">
+                </div>
+                
+                <div class="highlight-box fragment fade-up" data-fragment-index="1" style="margin-top: 1em;">
+                    <h4><i class="fas fa-info-circle"></i> Interpretação</h4>
+                    <ul style="display: flex; gap: 2em; flex-wrap: wrap;">
+                        <li><strong style="color: #3498db;">Cluster 0:</strong> Epidemia tardia</li>
+                        <li><strong style="color: #e74c3c;">Cluster 1:</strong> Epidemia precoce</li>
+                        <li><strong style="color: #2ecc71;">Cluster 2:</strong> Padrão bimodal</li>
+                        <li><strong style="color: #9b59b6;">Cluster 3:</strong> Epidemia prolongada</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 20: KEPLERMAPPER - PCA
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">07</span>
+                    <h2>KeplerMapper</h2>
+                </div>
+                
+                <div class="kmapper-container fragment fade-up">
+                    <div class="kmapper-header">
+                        <h4><i class="fas fa-project-diagram"></i> KeplerMapper - PCA</h4>
+                        <a href="output/kmapper_pca_2013.html" target="_blank">Abrir em nova aba <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                    <iframe src="output/kmapper_pca_2013.html"></iframe>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 21: KEPLERMAPPER - DISTÂNCIA
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>KeplerMapper - Distância L2</h3>
+                
+                <div class="kmapper-container fragment fade-up">
+                    <div class="kmapper-header">
+                        <h4><i class="fas fa-ruler"></i> Colorido por distância média</h4>
+                        <a href="output/kmapper_distancia_2013.html" target="_blank">Abrir em nova aba <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                    <iframe src="output/kmapper_distancia_2013.html"></iframe>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 22: KEPLERMAPPER - t-SNE
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>KeplerMapper - t-SNE</h3>
+                
+                <div class="kmapper-container fragment fade-up">
+                    <div class="kmapper-header">
+                        <h4><i class="fas fa-compress-arrows-alt"></i> Projeção t-SNE</h4>
+                        <a href="output/kmapper_tsne_2013.html" target="_blank">Abrir em nova aba <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                    <iframe src="output/kmapper_tsne_2013.html"></iframe>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 23: KEPLERMAPPER - L2 NORM
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>KeplerMapper - L2 Normalizado</h3>
+                
+                <div class="kmapper-container fragment fade-up">
+                    <div class="kmapper-header">
+                        <h4><i class="fas fa-chart-line"></i> Lens: norma L2</h4>
+                        <a href="output/kmapper_l2norm_2013.html" target="_blank">Abrir em nova aba <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                    <iframe src="output/kmapper_l2norm_2013.html"></iframe>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 24: CONCLUSÕES
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <div class="section-header">
+                    <span class="section-number">08</span>
+                    <h2>Conclusões</h2>
+                </div>
+                
+                <div class="cards-grid fragment fade-up">
+                    <div class="card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);"><i class="fas fa-check-double"></i></div>
+                        <h4>Padrões Identificados</h4>
+                        <p>Clusters bem definidos de municípios com comportamentos similares</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fas fa-link"></i></div>
+                        <h4>Sincronização</h4>
+                        <p>Pares altamente sincronizados identificados via TDA</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background: var(--gradient-ochre);"><i class="fas fa-lightbulb"></i></div>
+                        <h4>Metodologia</h4>
+                        <p>TDA oferece insights únicos para epidemiologia</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fas fa-heartbeat"></i></div>
+                        <h4>Aplicação</h4>
+                        <p>Orienta políticas de saúde pública coordenadas</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 25: TRABALHOS FUTUROS
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #1a1510 0%, #2C2416 100%)">
+                <h3>Trabalhos Futuros & Tecnologias</h3>
+                
+                <div class="two-col">
+                    <div class="highlight-box fragment fade-left">
+                        <h4><i class="fas fa-flask"></i> Próximos Passos</h4>
+                        <ul class="icon-list">
+                            <li><i class="fas fa-cloud-sun-rain"></i> Dados climáticos (precipitação, temperatura)</li>
+                            <li><i class="fas fa-infinity"></i> Análise de persistência homológica</li>
+                            <li><i class="fas fa-brain"></i> Modelos preditivos por cluster</li>
+                            <li><i class="fas fa-map-marked-alt"></i> Expandir para outros estados</li>
+                            <li><i class="fas fa-car"></i> Dados de mobilidade urbana</li>
+                        </ul>
+                    </div>
+                    <div class="highlight-box fragment fade-right">
+                        <h4><i class="fas fa-tools"></i> Tecnologias</h4>
+                        <ul class="icon-list">
+                            <li><i class="fab fa-python"></i> Python 3.12</li>
+                            <li><i class="fas fa-chart-bar"></i> Pandas, NumPy, Matplotlib</li>
+                            <li><i class="fas fa-brain"></i> Scikit-learn (PCA, K-Means, DBSCAN)</li>
+                            <li><i class="fas fa-project-diagram"></i> KeplerMapper (TDA)</li>
+                            <li><i class="fas fa-file-code"></i> Jupyter Notebook</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================
+                 SLIDE 26: OBRIGADO
+                 ============================================ -->
+            <section data-background-gradient="linear-gradient(135deg, #CC7722 0%, #B8860B 50%, #8B6914 100%)">
+                <div class="title-slide" style="color: var(--dark-brown);">
+                    <h1 style="color: var(--dark-brown); -webkit-text-fill-color: var(--dark-brown); font-size: 4em;">Obrigado!</h1>
+                    <p style="color: var(--charcoal); font-size: 1.2em; margin-bottom: 2em;">
+                        <i class="fas fa-virus"></i> Análise Epidemiológica de Dengue
+                    </p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 3em; margin-top: 2em;">
+                        <div style="text-align: center;">
+                            <i class="fab fa-github" style="font-size: 2em; color: var(--charcoal);"></i>
+                            <p style="font-size: 0.7em; color: var(--charcoal); margin-top: 0.5em;">github.com/mei-the-dev/dengue</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <i class="fas fa-file-code" style="font-size: 2em; color: var(--charcoal);"></i>
+                            <p style="font-size: 0.7em; color: var(--charcoal); margin-top: 0.5em;">Python + TDA + Reveal.js</p>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 3em; font-size: 0.8em; color: var(--charcoal);">Novembro 2025</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    
+    <script>
+        Reveal.initialize({
+            // Display settings
+            width: 1280,
+            height: 720,
+            margin: 0.1,
+            minScale: 0.2,
+            maxScale: 2.0,
+            
+            // Navigation
+            hash: true,
+            history: true,
+            keyboard: true,
+            touch: true,
+            
+            // Appearance
+            center: true,
+            progress: true,
+            slideNumber: 'c/t',
+            showNotes: false,
+            
+            // Transitions
+            transition: 'slide',
+            transitionSpeed: 'default',
+            backgroundTransition: 'fade',
+            
+            // Auto-animate
+            autoAnimate: true,
+            autoAnimateDuration: 0.8,
+            autoAnimateEasing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            
+            // Fragments
+            fragments: true,
+            fragmentInURL: true,
+            
+            // Loop
+            loop: false,
+            
+            // View settings
+            embedded: false,
+            help: true,
+            pause: true,
+            
+            // Controls
+            controls: true,
+            controlsTutorial: true,
+            controlsLayout: 'bottom-right',
+            controlsBackArrows: 'faded',
+        });
+        
+        // Add custom animations on slide change
+        Reveal.on('slidechanged', event => {
+            const currentSlide = event.currentSlide;
+            const elements = currentSlide.querySelectorAll('.card, .img-container, .highlight-box');
+            
+            elements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+
+    <!-- ========================================
+         LIGHTBOX MODAL STRUCTURE
+         ======================================== -->
+    <div class="lightbox-overlay" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <span class="lightbox-nav prev" onclick="navigateLightbox(-1)">&#10094;</span>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="">
+        <span class="lightbox-nav next" onclick="navigateLightbox(1)">&#10095;</span>
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+        <div class="lightbox-hint"><kbd>ESC</kbd> close • <kbd>←</kbd><kbd>→</kbd> navigate</div>
+    </div>
+
+    <script>
+        // ========================================
+        // LIGHTBOX FUNCTIONALITY
+        // ========================================
+        let currentImageIndex = 0;
+        let allImages = [];
+
+        // Initialize lightbox
+        function initLightbox() {
+            // Collect all images from img-container elements
+            const containers = document.querySelectorAll('.img-container');
+            allImages = [];
+            
+            containers.forEach((container, index) => {
+                const img = container.querySelector('img');
+                if (img) {
+                    allImages.push({
+                        src: img.src,
+                        alt: img.alt || '',
+                        caption: container.getAttribute('data-caption') || img.alt || ''
+                    });
+                    
+                    // Add click handler
+                    container.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openLightbox(allImages.length - 1);
+                    });
+                }
+            });
+            
+            // Re-index after collecting
+            containers.forEach((container, index) => {
+                container.setAttribute('data-index', index);
+                container.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openLightbox(parseInt(container.getAttribute('data-index')));
+                });
+            });
+        }
+
+        // Open lightbox
+        function openLightbox(index) {
+            if (allImages.length === 0) return;
+            
+            currentImageIndex = index;
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            lightboxImg.src = allImages[index].src;
+            lightboxCaption.textContent = allImages[index].caption || `Image ${index + 1} of ${allImages.length}`;
+            
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Disable reveal.js keyboard nav while lightbox is open
+            Reveal.configure({ keyboard: false });
+        }
+
+        // Close lightbox
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // Re-enable reveal.js keyboard nav
+            Reveal.configure({ keyboard: true });
+        }
+
+        // Navigate between images
+        function navigateLightbox(direction) {
+            if (allImages.length === 0) return;
+            
+            currentImageIndex += direction;
+            
+            // Loop around
+            if (currentImageIndex >= allImages.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = allImages.length - 1;
+            
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            
+            // Add transition effect
+            lightboxImg.style.opacity = '0';
+            setTimeout(() => {
+                lightboxImg.src = allImages[currentImageIndex].src;
+                lightboxCaption.textContent = allImages[currentImageIndex].caption || 
+                    `Image ${currentImageIndex + 1} of ${allImages.length}`;
+                lightboxImg.style.opacity = '1';
+            }, 150);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const lightbox = document.getElementById('lightbox');
+            if (!lightbox.classList.contains('active')) return;
+            
+            switch (e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    navigateLightbox(-1);
+                    break;
+                case 'ArrowRight':
+                    navigateLightbox(1);
+                    break;
+            }
+        });
+
+        // Click overlay to close
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', initLightbox);
+        
+        // Re-initialize when slides change (for dynamically loaded content)
+        Reveal.on('ready', initLightbox);
+    </script>
+</body>
+</html>
