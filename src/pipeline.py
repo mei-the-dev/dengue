@@ -50,7 +50,7 @@ def run_all_analyses(df, year=2013):
     similar_pairs = find_most_similar_pairs(md1, mun_list)
     dissimilar_pairs = find_most_dissimilar_pairs(md1, mun_list)
     thresholds = analyze_thresholds(md1, mun_list)
-    optimal_thr = find_optimal_threshold(thresholds)
+    optimal_thr = find_optimal_threshold(md1, mun_list)
     return {
         'df': df,
         'df_year': df_year,
@@ -72,10 +72,10 @@ def generate_all_figures(results, output_dir='output'):
     ensure_output_dir(output_dir)
     plot_weeks_per_year(results['weeks_per_year'], f'{output_dir}/weeks_per_year.pdf')
     plot_epidemic_curves_by_year(results['df'], f'{output_dir}/curvas_por_ano.pdf')
-    plot_incidence_rates(results['norm_pop'], f'{output_dir}/incidencia.pdf')
+    plot_incidence_rates(results['norm_pop'], top_n=20, output_path=f'{output_dir}/incidencia.pdf')
     plot_normalized_curves(results['norm_unit'], f'{output_dir}/curvas_normalizadas.pdf')
-    plot_distance_heatmap(results['md1'], results['mun_list'], f'{output_dir}/matriz_distancia_L1.pdf', title='Matriz de Distância L1')
-    plot_distance_heatmap(results['md2'], results['mun_list'], f'{output_dir}/matriz_distancia_L2.pdf', title='Matriz de Distância L2')
+    plot_distance_heatmap(results['md1'], results['mun_list'], output_path=f'{output_dir}/matriz_distancia_L1.pdf')
+    plot_distance_heatmap(results['md2'], results['mun_list'], output_path=f'{output_dir}/matriz_distancia_L2.pdf')
     # Adicione outras visualizações conforme necessário
 
 
