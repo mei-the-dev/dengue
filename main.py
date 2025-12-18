@@ -78,14 +78,32 @@ def main():
         return
     
     # =========================================================================
+    # ETAPA 0: Validação Inicial dos Dados
+    # =========================================================================
+    print_section("Validação inicial dos dados brutos")
+    # Carregar dados para validação rápida
+    df_raw = pd.read_excel(data_file)
+    print(f"  Registros brutos: {len(df_raw)}")
+    print(f"  Colunas: {df_raw.columns.tolist()}")
+    print(f"  Valores ausentes por coluna:\n{df_raw.isnull().sum()}")
+    # Checar valores negativos ou inconsistentes
+    if (df_raw['casos'] < 0).any():
+        print("  ⚠️ Atenção: Existem valores negativos de casos!")
+    # ...pode-se adicionar mais validações conforme necessário...
+    del df_raw
+    
+    # =========================================================================
     # CARREGAR DADOS
     # =========================================================================
-    print_section("Carregando dados")
+    print_section("Carregando dados e padronizando estrutura")
     df = load_and_merge_dengue_data(data_file)
     print(f"✓ Dados carregados: {len(df)} registros")
     print(f"  Municípios: {df['municipio'].nunique()}")
     print(f"  Anos: {sorted(df['ano'].unique())}")
-    
+    # Remover registros com dados ausentes críticos
+    df = df.dropna(subset=['municipio', 'ano', 'semana_epi', 'casos'])
+    # Garantir tipos corretos
+    df['casos'] = df['casos'].astype(int)
     # Ano principal para análises detalhadas
     YEAR = 2013  # Ano com muitos casos
     
@@ -162,21 +180,21 @@ def main():
     # 2.2 Séries normalizadas
     print_section("Normalizando séries temporais")
     time_series = get_yearly_time_series(df, YEAR, normalize_to_52=True)
-    
-    # Filtrar municípios com dados de população
+    # Padronizar tamanho das séries (52 semanas)
+    for mun, series in time_series.items():
+        if len(series) != 52:
+            print(f"  ⚠️ Série de {mun} tem {len(series)} semanas. Preenchendo com zeros.")
+            time_series[mun] = np.pad(series, (0, 52 - len(series)), 'constant')
+    # Filtrar municípios com dados de população e séries não nulas
     time_series_filtered = {mun: series for mun, series in time_series.items() 
                            if mun in POPULACAO_CENSO_2010 and np.sum(series) > 0}
-    
     print(f"  Municípios com dados completos: {len(time_series_filtered)}")
-    
     # Normalizar por área unitária
     normalized_series = normalize_all_series_by_total(time_series_filtered)
-    
     # Visualização: Curvas normalizadas (top 10)
     top_mun_list = totals.head(10)['municipio'].tolist()
     top_normalized = {mun: normalized_series[mun] for mun in top_mun_list 
                       if mun in normalized_series}
-    
     plot_normalized_curves(top_normalized, 
                           title=f"Curvas Normalizadas (Área Unitária) - Top 10 Municípios - {YEAR}",
                           output_path=output_dir / f"tarefa2_curvas_normalizadas_{YEAR}.png")
@@ -200,12 +218,13 @@ def main():
     
     # 3.1 Calcular matrizes de distância
     print_section("Calculando matrizes de distância")
+    if len(normalized_series) < 2:
+        print("❌ Não há municípios suficientes para calcular distâncias.")
+        return
     MD1, MD2, municipalities = compute_both_distance_matrices(normalized_series)
-    
     print(f"  Dimensões das matrizes: {MD1.shape}")
     print(f"  Distância L1 - Mín: {MD1[MD1 > 0].min():.4f}, Máx: {MD1.max():.4f}, Média: {MD1[MD1 > 0].mean():.4f}")
     print(f"  Distância L2 - Mín: {MD2[MD2 > 0].min():.4f}, Máx: {MD2.max():.4f}, Média: {MD2[MD2 > 0].mean():.4f}")
-    
     # Salvar matrizes em CSV
     save_distance_matrices(MD1, MD2, municipalities, output_dir)
     

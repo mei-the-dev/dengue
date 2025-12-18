@@ -118,11 +118,12 @@
     \end{columns}
 \end{frame}
 
+
 % =============================================================================
 \section{Introdução e Dados}
 % =============================================================================
 
-\begin{frame}{Visão Geral do Projeto}
+\begin{frame}{\faInfoCircle\ Visão Geral do Projeto}
     \begin{columns}[T]
         \begin{column}{0.55\textwidth}
             \begin{tcolorbox}[colback=dengueBlu!5,colframe=dengueBlu,title={\faDatabase\ Fonte dos Dados}]
@@ -148,33 +149,22 @@
             \end{tcolorbox}
         \end{column}
     \end{columns}
+    \vspace{0.5em}
+    \begin{tcolorbox}[colback=dengueYlw!10,colframe=dengueOrg,title={\faLightbulb\ Objetivo}]
+        Analisar a dinâmica da dengue no RJ usando métodos de Topological Data Analysis (TDA) e visualização de dados, destacando padrões temporais e espaciais.
+    \end{tcolorbox}
 \end{frame}
 
-\begin{frame}{Casos por Ano — Resultados}
+
+\begin{frame}{\faChartBar\ Casos por Ano — Resultados}
     \begin{columns}
         \begin{column}{0.55\textwidth}
-            \begin{tikzpicture}
-                \begin{axis}[
-                    ybar,
-                    width=8.5cm, height=6cm,
-                    xlabel={Ano},
-                    ylabel={Total de Casos},
-                    symbolic x coords={2010,2011,2012,2013,2014,2015,2016},
-                    xtick=data,
-                    ymin=0,
-                    bar width=0.6cm,
-                    nodes near coords,
-                    nodes near coords style={font=\tiny,above},
-                    every node near coord/.append style={rotate=45,anchor=west},
-                    enlarge x limits=0.12,
-                ]
-                \addplot[fill=dengueBlu!70,draw=dengueBlu] coordinates {
-                    (2010,85432) (2011,102567) (2012,78234) 
-                    (2013,185643) (2014,45678) (2015,67890) (2016,23456)
-                };
-                \addplot[fill=dengueRed,draw=dengueRed!80] coordinates {(2013,185643)};
-                \end{axis}
-            \end{tikzpicture}
+            % Substituir gráfico TikZ por visualização real
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.98\linewidth]{output/tarefa1_curvas_por_ano.pdf}
+                \caption*{\footnotesize Total de casos de dengue por ano (2010--2016).}
+            \end{figure}
         \end{column}
         \begin{column}{0.43\textwidth}
             \begin{alertblock}{\faExclamationTriangle\ Achados Principais}
@@ -185,7 +175,6 @@
                     \item 2016: dados incompletos (32 sem.)
                 \end{itemize}
             \end{alertblock}
-            
             \vspace{0.5em}
             \begin{exampleblock}{\faCheck\ Seleção}
                 Ano \textbf{2013} escolhido como referência por ter dados completos e maior dinâmica epidêmica.

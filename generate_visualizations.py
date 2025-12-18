@@ -14,11 +14,19 @@ from pathlib import Path
 OUTPUT_DIR = Path("output")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
-# Configure matplotlib for better output
-plt.rcParams['figure.dpi'] = 150
-plt.rcParams['savefig.dpi'] = 150
-plt.rcParams['font.size'] = 10
+# Configure matplotlib for better output and academic style
+plt.rcParams['figure.dpi'] = 200
+plt.rcParams['savefig.dpi'] = 300
+plt.rcParams['font.size'] = 12
+plt.rcParams['axes.titlesize'] = 16
+plt.rcParams['axes.labelsize'] = 13
+plt.rcParams['legend.fontsize'] = 11
+plt.rcParams['xtick.labelsize'] = 10
+plt.rcParams['ytick.labelsize'] = 10
 plt.rcParams['figure.facecolor'] = 'white'
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['pdf.fonttype'] = 42  # TrueType fonts for LaTeX compatibility
+plt.rcParams['ps.fonttype'] = 42
 
 def load_distance_matrix(filepath):
     """Load distance matrix from CSV."""
@@ -27,80 +35,121 @@ def load_distance_matrix(filepath):
 
 def create_heatmap(df, title, output_path, cmap='YlOrRd'):
     """Create a heatmap visualization of a distance matrix."""
-    fig, ax = plt.subplots(figsize=(16, 14))
-    
-    # Create heatmap with seaborn
+    fig, ax = plt.subplots(figsize=(14, 12))
+    # Use a colorblind-friendly palette if possible
+    cmap = cmap if cmap else sns.color_palette("rocket", as_cmap=True)
     sns.heatmap(
-        df, 
+        df,
         cmap=cmap,
         center=None,
         square=True,
-        linewidths=0,
+        linewidths=0.5,
+        linecolor='gray',
         cbar_kws={'label': 'Distância', 'shrink': 0.8},
         ax=ax
     )
-    
     ax.set_title(title, fontsize=16, fontweight='bold', pad=20)
-    ax.set_xlabel('Município', fontsize=12)
-    ax.set_ylabel('Município', fontsize=12)
-    
-    # Rotate labels for readability
-    plt.xticks(rotation=90, fontsize=6)
-    plt.yticks(rotation=0, fontsize=6)
-    
+    ax.set_xlabel('Município', fontsize=13)
+    ax.set_ylabel('Município', fontsize=13)
+    plt.xticks(rotation=90, fontsize=8)
+    plt.yticks(rotation=0, fontsize=8)
     plt.tight_layout()
+    # Export to PDF for academic use
+    pdf_path = Path(str(output_path).replace('.png', '.pdf'))
     plt.savefig(output_path, bbox_inches='tight', facecolor='white')
+    plt.savefig(pdf_path, bbox_inches='tight', facecolor='white')
     plt.close()
-    print(f"✓ Saved: {output_path}")
+    print(f"✓ Saved: {output_path} and {pdf_path}")
 
 def create_histogram(df, title, output_path, color='steelblue'):
     """Create histogram of distance distribution."""
     fig, ax = plt.subplots(figsize=(10, 6))
-    
     # Get upper triangle values (excluding diagonal)
     values = df.values[np.triu_indices(len(df), k=1)]
-    
-    ax.hist(values, bins=50, color=color, edgecolor='white', alpha=0.8)
+    ax.hist(values, bins=50, color=color, edgecolor='black', alpha=0.8)
     ax.axvline(values.mean(), color='red', linestyle='--', linewidth=2, label=f'Média: {values.mean():.3f}')
     ax.axvline(np.median(values), color='orange', linestyle='--', linewidth=2, label=f'Mediana: {np.median(values):.3f}')
-    
-    ax.set_title(title, fontsize=14, fontweight='bold')
-    ax.set_xlabel('Distância', fontsize=12)
-    ax.set_ylabel('Frequência', fontsize=12)
+    ax.set_title(title, fontsize=15, fontweight='bold')
+    ax.set_xlabel('Distância', fontsize=13)
+    ax.set_ylabel('Frequência', fontsize=13)
     ax.legend()
     ax.grid(True, alpha=0.3)
-    
     plt.tight_layout()
+    pdf_path = Path(str(output_path).replace('.png', '.pdf'))
     plt.savefig(output_path, bbox_inches='tight', facecolor='white')
+    plt.savefig(pdf_path, bbox_inches='tight', facecolor='white')
     plt.close()
-    print(f"✓ Saved: {output_path}")
+    print(f"✓ Saved: {output_path} and {pdf_path}")
 
 def create_comparison_boxplot(df_l1, df_l2, output_path):
     """Create boxplot comparing L1 and L2 distributions."""
     fig, ax = plt.subplots(figsize=(10, 6))
-    
     values_l1 = df_l1.values[np.triu_indices(len(df_l1), k=1)]
     values_l2 = df_l2.values[np.triu_indices(len(df_l2), k=1)]
-    
     bp = ax.boxplot(
-        [values_l1, values_l2], 
+        [values_l1, values_l2],
         labels=['L1 (Manhattan)', 'L2 (Euclidiana)'],
         patch_artist=True
     )
-    
-    colors = ['#3498db', '#e74c3c']
+    colors = ['#1b9e77', '#d95f02']
     for patch, color in zip(bp['boxes'], colors):
         patch.set_facecolor(color)
         patch.set_alpha(0.7)
-    
-    ax.set_title('Comparação das Distribuições de Distância (2013)', fontsize=14, fontweight='bold')
-    ax.set_ylabel('Distância', fontsize=12)
+    ax.set_title('Comparação das Distribuições de Distância (2013)', fontsize=15, fontweight='bold')
+    ax.set_ylabel('Distância', fontsize=13)
     ax.grid(True, alpha=0.3, axis='y')
-    
     plt.tight_layout()
+    pdf_path = Path(str(output_path).replace('.png', '.pdf'))
     plt.savefig(output_path, bbox_inches='tight', facecolor='white')
+    plt.savefig(pdf_path, bbox_inches='tight', facecolor='white')
     plt.close()
-    print(f"✓ Saved: {output_path}")
+    print(f"✓ Saved: {output_path} and {pdf_path}")
+
+# --- New: Plot time series for municipalities ---
+def plot_time_series(series_dict, title, output_path, highlight=None):
+    """Plot time series for multiple municipalities. highlight: list of names to emphasize."""
+    fig, ax = plt.subplots(figsize=(12, 6))
+    for mun, series in series_dict.items():
+        lw = 2.5 if highlight and mun in highlight else 1.2
+        alpha = 1.0 if highlight and mun in highlight else 0.5
+        ax.plot(series, label=mun if highlight and mun in highlight else None, lw=lw, alpha=alpha)
+    ax.set_title(title, fontsize=15, fontweight='bold')
+    ax.set_xlabel('Semana Epidemiológica', fontsize=13)
+    ax.set_ylabel('Casos (normalizado)', fontsize=13)
+    if highlight:
+        ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    pdf_path = Path(str(output_path).replace('.png', '.pdf'))
+    plt.savefig(output_path, bbox_inches='tight', facecolor='white')
+    plt.savefig(pdf_path, bbox_inches='tight', facecolor='white')
+    plt.close()
+    print(f"✓ Saved: {output_path} and {pdf_path}")
+
+# --- New: Plot clusters of municipalities ---
+def plot_clusters_dict(clusters, series_dict, title, output_path):
+    """Plot clusters of municipalities, each cluster in a different color."""
+    from itertools import cycle
+    colors = cycle(sns.color_palette('tab10', n_colors=10))
+    fig, ax = plt.subplots(figsize=(12, 6))
+    for cluster, color in zip(clusters, colors):
+        for mun in cluster:
+            if mun in series_dict:
+                ax.plot(series_dict[mun], color=color, alpha=0.7, lw=1.5)
+        # Highlight cluster label
+        if cluster:
+            ax.plot([], [], color=color, label=f'Cluster ({len(cluster)})')
+    ax.set_title(title, fontsize=15, fontweight='bold')
+    ax.set_xlabel('Semana Epidemiológica', fontsize=13)
+    ax.set_ylabel('Casos (normalizado)', fontsize=13)
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    plt.tight_layout()
+    pdf_path = Path(str(output_path).replace('.png', '.pdf'))
+    plt.savefig(output_path, bbox_inches='tight', facecolor='white')
+    plt.savefig(pdf_path, bbox_inches='tight', facecolor='white')
+    plt.close()
+    print(f"✓ Saved: {output_path} and {pdf_path}")
 
 def find_top_pairs(df, n=10, ascending=True):
     """Find top n most/least similar pairs."""
