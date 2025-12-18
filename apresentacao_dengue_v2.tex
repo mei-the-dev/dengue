@@ -396,14 +396,15 @@
     \end{tikzpicture}
 \end{frame}
 
+
 \begin{frame}{Matrizes de Distância — Estatísticas (2013)}
     \begin{columns}
         \begin{column}{0.45\textwidth}
             \begin{table}
                 \centering
                 \begin{tabular}{lcc}
-                    \toprule
-                    \textbf{Métrica} & \textbf{L1} & \textbf{L2} \\
+                    	oprule
+                    	extbf{Métrica} & \textbf{L1} & \textbf{L2} \\
                     \midrule
                     Dimensão & \multicolumn{2}{c}{$91 \times 91$} \\
                     \midrule
@@ -415,7 +416,6 @@
                     \bottomrule
                 \end{tabular}
             \end{table}
-            
             \vspace{0.5em}
             \begin{exampleblock}{\faCheck\ Interpretação}
                 \footnotesize
@@ -424,29 +424,11 @@
             \end{exampleblock}
         \end{column}
         \begin{column}{0.53\textwidth}
-            \begin{tikzpicture}
-                \begin{axis}[
-                    ybar,
-                    width=7.5cm, height=5cm,
-                    xlabel={Distância L1},
-                    ylabel={Frequência},
-                    xmin=0, xmax=2,
-                    ymin=0,
-                    bar width=0.08cm,
-                    fill=dengueBlu!60,
-                    draw=dengueBlu,
-                    title={\small Distribuição das Distâncias L1}
-                ]
-                \addplot coordinates {
-                    (0.2,50) (0.3,120) (0.4,280) (0.5,420) (0.6,580) 
-                    (0.7,650) (0.8,520) (0.9,380) (1.0,250) (1.1,180)
-                    (1.2,120) (1.3,80) (1.4,50) (1.5,30) (1.6,20)
-                    (1.7,10) (1.8,5)
-                };
-                \draw[dengueRed,ultra thick,dashed] (axis cs:0.751,0) -- (axis cs:0.751,700);
-                \node[dengueRed,font=\tiny] at (axis cs:0.95,650) {Média};
-                \end{axis}
-            \end{tikzpicture}
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.98\linewidth]{output/tarefa3_distribuicao_distancias_2013.pdf}
+                \caption*{\footnotesize Distribuição das distâncias L1 e L2 entre municípios (2013).}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
@@ -456,9 +438,10 @@
         \begin{column}{0.48\textwidth}
             \begin{block}{\faLink\ Top 10 Pares (menor distância L1)}
                 \footnotesize
+                % Tabela pode ser mantida ou gerada automaticamente
                 \begin{tabular}{llc}
-                    \toprule
-                    \textbf{Município 1} & \textbf{Município 2} & \textbf{L1} \\
+                    	oprule
+                    	extbf{Município 1} & \textbf{Município 2} & \textbf{L1} \\
                     \midrule
                     Niterói & Angra dos Reis & 0.199 \\
                     São Gonçalo & Angra dos Reis & 0.202 \\
@@ -475,29 +458,14 @@
             \end{block}
         \end{column}
         \begin{column}{0.5\textwidth}
-            \begin{tikzpicture}
-                \begin{axis}[
-                    width=7cm, height=5.5cm,
-                    xlabel={Semana},
-                    ylabel={Proporção},
-                    xmin=1, xmax=52,
-                    ymin=0,
-                    legend pos=north east,
-                    legend style={font=\tiny},
-                    grid=major,
-                    grid style={dashed,gray!30},
-                    title={\small Curvas Sincronizadas (L1=0.199)}
-                ]
-                \addplot[dengueBlu,thick,smooth] coordinates {
-                    (1,0.02) (5,0.04) (9,0.08) (13,0.12) (17,0.09) 
-                    (21,0.05) (25,0.02) (29,0.01) (33,0.01) (37,0.01)
-                    (41,0.01) (45,0.01) (49,0.02)
-                };
-                \addlegendentry{Niterói}
-                
-                \addplot[dengueRed,thick,dashed,smooth] coordinates {
-                    (1,0.02) (5,0.05) (9,0.09) (13,0.11) (17,0.08) 
-                    (21,0.04) (25,0.02) (29,0.01) (33,0.01) (37,0.01)
+            \begin{figure}
+                \centering
+                \includegraphics[width=0.98\linewidth]{output/tarefa3_pares_similares_2013.pdf}
+                \caption*{\footnotesize Curvas normalizadas dos pares mais sincronizados (menor L1).}
+            \end{figure}
+        \end{column}
+    \end{columns}
+\end{frame}
                     (41,0.01) (45,0.01) (49,0.02)
                 };
                 \addlegendentry{Angra dos Reis}
